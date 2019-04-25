@@ -7,6 +7,6 @@ import (
 
 func main() {
 	fmt.Println("Welcome to the go game!")
-	board.Initialize()
-	board.ShowBoard()
+	var boardState = board.Initialize()
+	boardState.ShowBoard()
 }
