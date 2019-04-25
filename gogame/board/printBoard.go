@@ -1,4 +1,5 @@
 package board
+
 import (
 	"fmt"
 )
@@ -10,4 +11,3 @@ func ShowBoard() {
 		fmt.Println("|_|_|_|_|_|_|_|_|_|")
 	}
 }
-

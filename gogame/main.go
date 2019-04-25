@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"git-gogame/gogame/board"
@@ -6,5 +7,6 @@ import (
 
 func main() {
 	fmt.Println("Welcome to the go game!")
+	board.Initialize()
 	board.ShowBoard()
 }
