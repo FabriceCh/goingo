@@ -57,4 +57,11 @@ func TestSetSmallHandicap(t *testing.T) {
 	} else if (!boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 6})) {
 		t.Errorf("The handicap should not be applied if the board is not empty.")
 	}
+
+	boardState, _ = Initialize(10)
+	err = boardState.SetHandicap(2)
+
+	if err == nil {
+		t.Errorf("If no handicap set is available an error should be returned.")
+	}
 }
