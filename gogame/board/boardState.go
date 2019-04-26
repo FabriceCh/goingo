@@ -35,8 +35,12 @@ func (boardState BoardState) Size() int {
 	return len(boardState)
 }
 
+func (boardState BoardState) GetPlace(position BoardPosition) CrossPoint {
+	return boardState[position.Row][position.Column]
+}
+
 func (boardState BoardState) IsPlaceEmpty(position BoardPosition) bool {
-	return boardState[position.Row][position.Column] == Vacant
+	return boardState.GetPlace(position) == Vacant
 }
 
 func (boardState BoardState) IsEmpty() bool {
