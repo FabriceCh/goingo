@@ -1,6 +1,8 @@
 package board
 
-import "fmt"
+import (
+	"errors"
+)
 
 //Representing the game according to official rules and terminology from wikipedia
 //https://en.wikipedia.org/wiki/Go_(game)
@@ -22,7 +24,10 @@ const (
 	StoneP2
 )
 
-func Initialize(size int) BoardState {
+func Initialize(size int) (BoardState, error) {
+	if size != 9 && size != 13 && size != 19 {
+		return BoardState{}, errors.New("Invalid board size")
+	}
 	boardState := BoardState{
 		Rows: make([]BoardRow, size),
 	}
@@ -35,16 +40,17 @@ func Initialize(size int) BoardState {
 		}
 		boardState.Rows[i] = row
 	}
-	return boardState
+	return boardState, nil
 }
 
-func (boardState *BoardState) Place(stone CrossPoint, position BoardPosition) {
+func (boardState *BoardState) Place(stone CrossPoint, position BoardPosition) error {
 	if position.Row >= boardState.Size() || position.CrossPoint >= boardState.Size() {
-		fmt.Println("Position not on the board.")
+		return errors.New("Position not on the board")
 	} else if !boardState.IsPlaceEmpty(position) {
-		fmt.Println("Board position not empty.")
+		return errors.New("Board position not empty")
 	} else {
 		boardState.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
+		return nil
 	}
 }
 
