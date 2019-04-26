@@ -6,6 +6,7 @@ import (
 
 func (boardState BoardState) ShowBoard() {
 	fmt.Println("Board: ")
+<<<<<<< HEAD
 	var dimension = boardState.Size()
 
 	for i := 0; i < dimension; i++ {
@@ -38,5 +39,16 @@ func (boardState BoardState) ShowBoard() {
 			fmt.Println(vertBarsLine)
 		}
 
+=======
+	var header = ""
+	var body = "|"
+	for i := 0; i < boardState.Size(); i++ {
+		header += " _"
+		body += "_|"
+	}
+	fmt.Println(header)
+	for i := 0; i < boardState.Size(); i++ {
+		fmt.Println(body)
+>>>>>>> ec7e249719331ec4692a19d3547bd922aea71e56
 	}
 }
