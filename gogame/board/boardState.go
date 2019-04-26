@@ -5,10 +5,15 @@ import "fmt"
 //Representing the game according to official rules and terminology from wikipedia
 //https://en.wikipedia.org/wiki/Go_(game)
 
-type BoardState [9][9]CrossPoint
+type BoardState struct {
+	Rows []BoardRow
+}
+type BoardRow struct {
+	CrossPoints []CrossPoint
+}
 type CrossPoint int
 type BoardPosition struct {
-	Row, Column int
+	Row, CrossPoint int
 }
 
 const (
@@ -17,26 +22,38 @@ const (
 	StoneP2
 )
 
-func Initialize() BoardState {
-	return BoardState{}
+func Initialize(size int) BoardState {
+	boardState := BoardState{
+		Rows: make([]BoardRow, size),
+	}
+	for i := 0; i < size; i++ {
+		row := BoardRow{
+			CrossPoints: make([]CrossPoint, size),
+		}
+		for j := 0; j < size; j++ {
+			row.CrossPoints[j] = Vacant
+		}
+		boardState.Rows[i] = row
+	}
+	return boardState
 }
 
 func (boardState *BoardState) Place(stone CrossPoint, position BoardPosition) {
-	if position.Row >= boardState.Size() || position.Column >= boardState.Size() {
+	if position.Row >= boardState.Size() || position.CrossPoint >= boardState.Size() {
 		fmt.Println("Position not on the board.")
 	} else if !boardState.IsPlaceEmpty(position) {
 		fmt.Println("Board position not empty.")
 	} else {
-		boardState[position.Row][position.Column] = stone
+		boardState.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
 	}
 }
 
 func (boardState BoardState) Size() int {
-	return len(boardState)
+	return len(boardState.Rows)
 }
 
 func (boardState BoardState) GetPlace(position BoardPosition) CrossPoint {
-	return boardState[position.Row][position.Column]
+	return boardState.Rows[position.Row].CrossPoints[position.CrossPoint]
 }
 
 func (boardState BoardState) IsPlaceEmpty(position BoardPosition) bool {
@@ -44,9 +61,9 @@ func (boardState BoardState) IsPlaceEmpty(position BoardPosition) bool {
 }
 
 func (boardState BoardState) IsEmpty() bool {
-	for i, _ := range boardState {
-		for j, _ := range boardState[i] {
-			if !boardState.IsPlaceEmpty(BoardPosition{Row: i, Column: j}) {
+	for i, _ := range boardState.Rows {
+		for j, _ := range boardState.Rows[i].CrossPoints {
+			if !boardState.IsPlaceEmpty(BoardPosition{Row: i, CrossPoint: j}) {
 				return false
 			}
 		}

@@ -6,8 +6,14 @@ import (
 
 func (boardState BoardState) ShowBoard() {
 	fmt.Println("Board: ")
-	fmt.Println(" _ _ _ _ _ _ _ _ _")
-	for i := 0; i < 9; i++ {
-		fmt.Println("|_|_|_|_|_|_|_|_|_|")
+	var header = ""
+	var body = "|"
+	for i := 0; i < boardState.Size(); i++ {
+		header += " _"
+		body += "_|"
+	}
+	fmt.Println(header)
+	for i := 0; i < boardState.Size(); i++ {
+		fmt.Println(body)
 	}
 }

@@ -15,23 +15,23 @@ var SmallBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": BoardPosition{
 			Row:    2,
-			Column: 6,
+			CrossPoint: 6,
 		},
 		"b": BoardPosition{
 			Row:    6,
-			Column: 2,
+			CrossPoint: 2,
 		},
 		"c": BoardPosition{
 			Row:    6,
-			Column: 6,
+			CrossPoint: 6,
 		},
 		"d": BoardPosition{
 			Row:    2,
-			Column: 2,
+			CrossPoint: 2,
 		},
 		"e": BoardPosition{
 			Row:    4,
-			Column: 4,
+			CrossPoint: 4,
 		},
 	},
 	levels: HandicapLevels{
@@ -46,39 +46,39 @@ var MediumBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": BoardPosition{
 			Row:    2,
-			Column: 10,
+			CrossPoint: 10,
 		},
 		"b": BoardPosition{
 			Row:    10,
-			Column: 2,
+			CrossPoint: 2,
 		},
 		"c": BoardPosition{
 			Row:    10,
-			Column: 10,
+			CrossPoint: 10,
 		},
 		"d": BoardPosition{
 			Row:    2,
-			Column: 2,
+			CrossPoint: 2,
 		},
 		"e": BoardPosition{
 			Row:    6,
-			Column: 6,
+			CrossPoint: 6,
 		},
 		"f": BoardPosition{
 			Row:    6,
-			Column: 2,
+			CrossPoint: 2,
 		},
 		"g": BoardPosition{
 			Row:    6,
-			Column: 10,
+			CrossPoint: 10,
 		},
 		"h": BoardPosition{
 			Row:    2,
-			Column: 6,
+			CrossPoint: 6,
 		},
 		"i": BoardPosition{
 			Row:    10,
-			Column: 6,
+			CrossPoint: 6,
 		},
 	},
 	levels: HandicapLevels{
@@ -97,39 +97,39 @@ var LargeBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": BoardPosition{
 			Row:    3,
-			Column: 15,
+			CrossPoint: 15,
 		},
 		"b": BoardPosition{
 			Row:    15,
-			Column: 3,
+			CrossPoint: 3,
 		},
 		"c": BoardPosition{
 			Row:    15,
-			Column: 15,
+			CrossPoint: 15,
 		},
 		"d": BoardPosition{
 			Row:    3,
-			Column: 3,
+			CrossPoint: 3,
 		},
 		"e": BoardPosition{
 			Row:    9,
-			Column: 9,
+			CrossPoint: 9,
 		},
 		"f": BoardPosition{
 			Row:    9,
-			Column: 3,
+			CrossPoint: 3,
 		},
 		"g": BoardPosition{
 			Row:    9,
-			Column: 15,
+			CrossPoint: 15,
 		},
 		"h": BoardPosition{
 			Row:    3,
-			Column: 9,
+			CrossPoint: 9,
 		},
 		"i": BoardPosition{
 			Row:    15,
-			Column: 9,
+			CrossPoint: 9,
 		},
 	},
 	levels: HandicapLevels{
