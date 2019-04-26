@@ -6,8 +6,37 @@ import (
 
 func (boardState BoardState) ShowBoard() {
 	fmt.Println("Board: ")
-	fmt.Println(" _ _ _ _ _ _ _ _ _")
-	for i := 0; i < 9; i++ {
-		fmt.Println("|_|_|_|_|_|_|_|_|_|")
+	var dimension = boardState.Size()
+
+	for i := 0; i < dimension; i++ {
+		var line = ""
+		var vertBarsLine = " "
+		for j := 0; j < dimension; j++ {
+			var elementAtPlace = BoardState.GetPlace(boardState, BoardPosition{Row: i, Column: j})
+			var elementString string
+			switch elementAtPlace {
+			case Vacant:
+				elementString = "   "
+			case StoneP1:
+				elementString = " ○ "
+			case StoneP2:
+				elementString = " ● "
+			}
+
+			line += elementString
+
+			if j != (dimension - 1) {
+				line += "———"
+				vertBarsLine += "|     "
+			} else {
+				vertBarsLine += "|"
+			}
+		}
+		fmt.Println(line)
+		if i != (dimension - 1) {
+
+			fmt.Println(vertBarsLine)
+		}
+
 	}
 }
