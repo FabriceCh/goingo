@@ -2,7 +2,6 @@ package board
 
 import (
 	"errors"
-	"fmt"
 )
 
 type HandicapPositions map[string]BoardPosition
@@ -167,7 +166,6 @@ func (boardState *BoardState) SetHandicap(level int) error {
 		return errors.New("Invalid handicap level")
 	} else {
 		for _, position := range positions {
-			fmt.Println(set.positions[position])
 			boardState.Place(StoneP1, set.positions[position])
 		}
 		return nil
