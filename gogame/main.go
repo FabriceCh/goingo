@@ -1,48 +1,64 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
 	"git-gogame/gogame/game"
+	"os"
+	"strconv"
+	"strings"
 )
 
 var currentGame game.GameState
+var reader = bufio.NewReader(os.Stdin)
 
 func main() {
 	fmt.Println("Welcome to the go game!")
-	commands := []string{"help", "start", "handicap", "handicap", "place", "place"}
-	for _, command := range commands {
-		msg, shouldRender, err := execute(command)
+	for {
+		fmt.Print("→ ")
+		input, _ := reader.ReadString('\n')
+		input = strings.Replace(input, "\n", "", -1)
+		args := strings.Split(input, " ")
+
+		msg, renderBoard, err := execute(args[0], args[1:])
 		if err != nil {
 			fmt.Println(err)
 		} else {
 			if msg != "" {
 				fmt.Println(msg)
 			}
-			if shouldRender {
-				currentGame.Board.ShowBoard()
+			if renderBoard {
+				currentGame.Show()
 			}
 		}
-
 	}
 }
 
-func execute(command string, args ...string) (msg string, shouldRender bool, err error) {
+func execute(command string, args []string) (msg string, renderBoard bool, err error) {
 	switch command {
+	case "exit":
+		os.Exit(0)
 	case "help":
-		msg = "Help command text."
-		shouldRender = false
+		msg = "Help command text"
+		renderBoard = false
 		err = nil
 	case "start":
+		if len(args) < 1 {
+			err = errors.New("Too few arguments")
+			return
+		}
+		size, _ := strconv.Atoi(args[0])
 		var newGame game.GameState
-		newGame, err = game.Start(9)
+		newGame, err = game.Start(size)
 		if err == nil {
 			currentGame = newGame
-			msg = "Started a new game with a 9x9 board."
-			shouldRender = true
+			msg = fmt.Sprintf("Started a new game with a %dx%d board", size, size)
+			renderBoard = true
 		}
 	default:
-		msg, err = currentGame.ExecuteCommand(command)
-		shouldRender = err == nil
+		msg, err = currentGame.ExecuteCommand(command, args)
+		renderBoard = err == nil
 	}
 	return
 }

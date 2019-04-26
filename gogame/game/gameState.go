@@ -2,7 +2,9 @@ package game
 
 import (
 	"errors"
+	"fmt"
 	"git-gogame/gogame/board"
+	"strconv"
 )
 
 // This will eventually handle turns and points
@@ -17,17 +19,32 @@ func Start(size int) (GameState, error) {
 	}, err
 }
 
-func (gameState GameState) ExecuteCommand(command string, args ...string) (msg string, err error) {
+func (gameState GameState) ExecuteCommand(command string, args []string) (msg string, err error) {
 	switch command {
 	case "handicap":
-		err = gameState.Board.SetHandicap(2)
-		msg = "Set handicap of level 2 for Player 1"
+		if len(args) < 1 {
+			err = errors.New("Too few arguments")
+			return
+		}
+		level, _ := strconv.Atoi(args[0])
+		err = gameState.Board.SetHandicap(level)
+		msg = fmt.Sprintf("Set handicap of level %d for Player 1", level)
 	case "place":
-		err = gameState.Board.Place(board.StoneP1, board.BoardPosition{Row: 0, CrossPoint: 0})
-		msg = "Placed a stone at (0,0) for Player 1"
+		if len(args) < 2 {
+			err = errors.New("Too few arguments")
+			return
+		}
+		row, _ := strconv.Atoi(args[0])
+		crossPoint, _ := strconv.Atoi(args[1])
+		err = gameState.Board.Place(board.StoneP1, board.BoardPosition{Row: row, CrossPoint: crossPoint})
+		msg = fmt.Sprintf("Placed a stone at (%d,%d) for Player 1", row, crossPoint)
 	default:
 		err = errors.New("Invalid command")
 		msg = ""
 	}
 	return
+}
+
+func (gameState GameState) Show() {
+	gameState.Board.ShowBoard()
 }
