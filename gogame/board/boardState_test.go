@@ -12,7 +12,7 @@ func TestInitialize(t *testing.T) {
 
 	boardState, err = Initialize(13)
 	if boardState.Size() != 13 {
-		t.Errorf("Initialized board states should be 9x9")
+		t.Errorf("Initialized board states should be 13x13")
 	} else if !boardState.IsEmpty() {
 		t.Errorf("Initialized board states should be empty")
 	}
