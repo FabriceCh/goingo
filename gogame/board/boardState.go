@@ -66,6 +66,10 @@ func (boardState BoardState) IsPlaceEmpty(position BoardPosition) bool {
 	return boardState.GetPlace(position) == Vacant
 }
 
+/*
+*	IsEmpty
+*   function that determines if the board is empty
+ */
 func (boardState BoardState) IsEmpty() bool {
 	for i, _ := range boardState.Rows {
 		for j, _ := range boardState.Rows[i].CrossPoints {
