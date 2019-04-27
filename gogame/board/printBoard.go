@@ -26,15 +26,14 @@ func (boardState BoardState) ShowBoard() {
 			line += elementString
 
 			if j != (dimension - 1) {
-				line += "———"
-				vertBarsLine += "|     "
+				line += "——"
+				vertBarsLine += "|    "
 			} else {
 				vertBarsLine += "|"
 			}
 		}
 		fmt.Println(line)
 		if i != (dimension - 1) {
-
 			fmt.Println(vertBarsLine)
 		}
 	}
