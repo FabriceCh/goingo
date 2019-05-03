@@ -5,7 +5,6 @@ import (
 )
 
 func (boardState BoardState) ShowBoard() {
-	fmt.Println("Board: ")
 	var dimension = boardState.Size()
 
 	for i := 0; i < dimension; i++ {

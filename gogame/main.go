@@ -21,10 +21,14 @@ func main() {
 		input = strings.Replace(input, "\n", "", -1)
 		args := strings.Split(input, " ")
 
-		msg, renderBoard, err := execute(args[0], args[1:])
+		command := args[0]
+		msg, renderBoard, err := execute(command, args[1:])
 		if err != nil {
 			fmt.Println(err)
 		} else {
+			if command == "place" {
+				currentGame.EndTurn()
+			}
 			if msg != "" {
 				fmt.Println(msg)
 			}
