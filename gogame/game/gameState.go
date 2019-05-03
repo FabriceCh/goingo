@@ -9,6 +9,7 @@ import (
 
 // This will eventually handle turns and points
 type GameState struct {
+	isActive     bool
 	board        board.BoardState
 	player1      Player
 	player2      Player
@@ -26,6 +27,7 @@ func Start(size int) (GameState, error) {
 	player1 := Player{name: "Player 1", stone: board.StoneP1, points: 0}
 	player2 := Player{name: "Player 2", stone: board.StoneP2, points: 0}
 	return GameState{
+		isActive:     true,
 		board:        boardState,
 		player1:      player1,
 		player2:      player2,
@@ -34,6 +36,11 @@ func Start(size int) (GameState, error) {
 }
 
 func (gameState *GameState) ExecuteCommand(command string, args []string) (msg string, err error) {
+	if !gameState.isActive {
+		err = errors.New("No active game")
+		msg = ""
+		return
+	}
 	switch command {
 	case "handicap":
 		if len(args) < 1 {
@@ -69,5 +76,5 @@ func (gameState *GameState) EndTurn() {
 
 func (gameState GameState) Show() {
 	gameState.board.ShowBoard()
-	fmt.Printf("%s's turn:\n", gameState.activePlayer.name)
+	fmt.Printf("\n%s's turn:\n", gameState.activePlayer.name)
 }
