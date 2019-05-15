@@ -4,13 +4,19 @@ import (
 	"errors"
 )
 
+// HandicapPositions :
 type HandicapPositions map[string]Position
+
+// HandicapLevels :
 type HandicapLevels map[int][]string
+
+// HandicapSet :
 type HandicapSet struct {
 	positions HandicapPositions
 	levels    HandicapLevels
 }
 
+// SmallBoardHandicaps :
 var SmallBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": Position{
@@ -42,6 +48,7 @@ var SmallBoardHandicaps = HandicapSet{
 	},
 }
 
+// MediumBoardHandicaps :
 var MediumBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": Position{
@@ -93,6 +100,7 @@ var MediumBoardHandicaps = HandicapSet{
 	},
 }
 
+// LargeBoardHandicaps :
 var LargeBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
 		"a": Position{
@@ -144,6 +152,7 @@ var LargeBoardHandicaps = HandicapSet{
 	},
 }
 
+// SetHandicap :
 func (boardState *State) SetHandicap(level int) error {
 	if !boardState.IsEmpty() {
 		return errors.New("Board is not empty")
@@ -164,10 +173,10 @@ func (boardState *State) SetHandicap(level int) error {
 	var positions = set.levels[level]
 	if len(positions) == 0 {
 		return errors.New("Invalid handicap level")
-	} else {
-		for _, position := range positions {
-			boardState.Place(StoneP1, set.positions[position])
-		}
-		return nil
 	}
+	for _, position := range positions {
+		boardState.Place(StoneP1, set.positions[position])
+	}
+	return nil
+
 }

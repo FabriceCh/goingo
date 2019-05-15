@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// ShowBoard : function that prints the current state of the board in the console
 func (boardState State) ShowBoard() {
 	var dimension = boardState.Size()
 
