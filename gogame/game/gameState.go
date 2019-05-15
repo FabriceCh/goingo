@@ -7,21 +7,23 @@ import (
 	"strconv"
 )
 
-// This will eventually handle turns and points
+// GameState : This will eventually handle turns and points
 type GameState struct {
 	isActive     bool
-	board        board.BoardState
+	board        board.State
 	player1      Player
 	player2      Player
 	activePlayer Player
 }
 
+// Player :
 type Player struct {
 	name   string
 	stone  board.CrossPoint
 	points int
 }
 
+// Start :
 func Start(size int) (GameState, error) {
 	boardState, err := board.Initialize(size)
 	player1 := Player{name: "Player 1", stone: board.StoneP1, points: 0}
@@ -35,6 +37,7 @@ func Start(size int) (GameState, error) {
 	}, err
 }
 
+// ExecuteCommand :
 func (gameState *GameState) ExecuteCommand(command string, args []string) (msg string, err error) {
 	if !gameState.isActive {
 		err = errors.New("No active game")
@@ -57,7 +60,7 @@ func (gameState *GameState) ExecuteCommand(command string, args []string) (msg s
 		}
 		row, _ := strconv.Atoi(args[0])
 		crossPoint, _ := strconv.Atoi(args[1])
-		err = gameState.board.Place(gameState.activePlayer.stone, board.BoardPosition{Row: row, CrossPoint: crossPoint})
+		err = gameState.board.Place(gameState.activePlayer.stone, board.Position{Row: row, CrossPoint: crossPoint})
 		msg = fmt.Sprintf("Placed a stone at (%d,%d) for %s", row, crossPoint, gameState.activePlayer.name)
 	default:
 		err = errors.New("Invalid command")
@@ -66,6 +69,7 @@ func (gameState *GameState) ExecuteCommand(command string, args []string) (msg s
 	return
 }
 
+// EndTurn :
 func (gameState *GameState) EndTurn() {
 	if gameState.activePlayer == gameState.player1 {
 		gameState.activePlayer = gameState.player2
@@ -74,6 +78,7 @@ func (gameState *GameState) EndTurn() {
 	}
 }
 
+// Show :
 func (gameState GameState) Show() {
 	gameState.board.ShowBoard()
 	fmt.Printf("\n%s's turn:\n", gameState.activePlayer.name)

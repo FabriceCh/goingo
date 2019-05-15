@@ -2,7 +2,7 @@ package board
 
 import "testing"
 
-func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, whitePiecesPositions []BoardPosition) {
+func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []Position, whitePiecesPositions []Position) {
 	// set this to false to remove board output from tests
 	visuals := true
 
@@ -63,16 +63,16 @@ func TestSimpleSingleCapture(t *testing.T) {
 	    |    |    |
 	*/
 
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 2, CrossPoint: 2},
+	blackPiecesPositions := []Position{
+		Position{Row: 2, CrossPoint: 2},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 1, CrossPoint: 2},
-		BoardPosition{Row: 2, CrossPoint: 1},
-		BoardPosition{Row: 2, CrossPoint: 3},
+	whitePiecesPositions := []Position{
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 2, CrossPoint: 1},
+		Position{Row: 2, CrossPoint: 3},
 		// capturing move:
-		BoardPosition{Row: 3, CrossPoint: 2},
+		Position{Row: 3, CrossPoint: 2},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
@@ -86,15 +86,15 @@ func TestSingleWallCapture(t *testing.T) {
 	 |    |    |    |
 	*/
 
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 2},
+	blackPiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 2},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 1},
-		BoardPosition{Row: 1, CrossPoint: 2},
+	whitePiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 1},
+		Position{Row: 1, CrossPoint: 2},
 		// capturing move:
-		BoardPosition{Row: 0, CrossPoint: 3},
+		Position{Row: 0, CrossPoint: 3},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
@@ -108,14 +108,14 @@ func TestSingleCornerCapture(t *testing.T) {
 		|
 	*/
 
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 0},
+	blackPiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 0},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 1},
+	whitePiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 1},
 		// capturing move:
-		BoardPosition{Row: 1, CrossPoint: 0},
+		Position{Row: 1, CrossPoint: 0},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
@@ -135,25 +135,25 @@ func TestGroupCapture(t *testing.T) {
 		|    |    |    |
 	*/
 
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 1, CrossPoint: 1},
-		BoardPosition{Row: 2, CrossPoint: 1},
-		BoardPosition{Row: 3, CrossPoint: 1},
-		BoardPosition{Row: 1, CrossPoint: 2},
-		BoardPosition{Row: 2, CrossPoint: 2},
+	blackPiecesPositions := []Position{
+		Position{Row: 1, CrossPoint: 1},
+		Position{Row: 2, CrossPoint: 1},
+		Position{Row: 3, CrossPoint: 1},
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 2, CrossPoint: 2},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 1, CrossPoint: 0},
-		BoardPosition{Row: 2, CrossPoint: 0},
-		BoardPosition{Row: 3, CrossPoint: 0},
-		BoardPosition{Row: 0, CrossPoint: 1},
-		BoardPosition{Row: 4, CrossPoint: 1},
-		BoardPosition{Row: 0, CrossPoint: 2},
-		BoardPosition{Row: 3, CrossPoint: 2},
-		BoardPosition{Row: 1, CrossPoint: 3},
+	whitePiecesPositions := []Position{
+		Position{Row: 1, CrossPoint: 0},
+		Position{Row: 2, CrossPoint: 0},
+		Position{Row: 3, CrossPoint: 0},
+		Position{Row: 0, CrossPoint: 1},
+		Position{Row: 4, CrossPoint: 1},
+		Position{Row: 0, CrossPoint: 2},
+		Position{Row: 3, CrossPoint: 2},
+		Position{Row: 1, CrossPoint: 3},
 		// capturing move:
-		BoardPosition{Row: 2, CrossPoint: 3},
+		Position{Row: 2, CrossPoint: 3},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
@@ -182,32 +182,32 @@ func TestEyeCapture(t *testing.T) {
 
 	*/
 
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 2, CrossPoint: 2},
-		BoardPosition{Row: 3, CrossPoint: 2},
-		BoardPosition{Row: 4, CrossPoint: 2},
-		BoardPosition{Row: 2, CrossPoint: 3},
-		BoardPosition{Row: 4, CrossPoint: 3},
-		BoardPosition{Row: 2, CrossPoint: 4},
-		BoardPosition{Row: 3, CrossPoint: 4},
-		BoardPosition{Row: 4, CrossPoint: 4},
+	blackPiecesPositions := []Position{
+		Position{Row: 2, CrossPoint: 2},
+		Position{Row: 3, CrossPoint: 2},
+		Position{Row: 4, CrossPoint: 2},
+		Position{Row: 2, CrossPoint: 3},
+		Position{Row: 4, CrossPoint: 3},
+		Position{Row: 2, CrossPoint: 4},
+		Position{Row: 3, CrossPoint: 4},
+		Position{Row: 4, CrossPoint: 4},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 2, CrossPoint: 1},
-		BoardPosition{Row: 3, CrossPoint: 1},
-		BoardPosition{Row: 4, CrossPoint: 1},
-		BoardPosition{Row: 1, CrossPoint: 2},
-		BoardPosition{Row: 1, CrossPoint: 3},
-		BoardPosition{Row: 1, CrossPoint: 4},
-		BoardPosition{Row: 2, CrossPoint: 5},
-		BoardPosition{Row: 3, CrossPoint: 5},
-		BoardPosition{Row: 4, CrossPoint: 5},
-		BoardPosition{Row: 5, CrossPoint: 2},
-		BoardPosition{Row: 5, CrossPoint: 3},
-		BoardPosition{Row: 5, CrossPoint: 4},
+	whitePiecesPositions := []Position{
+		Position{Row: 2, CrossPoint: 1},
+		Position{Row: 3, CrossPoint: 1},
+		Position{Row: 4, CrossPoint: 1},
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 1, CrossPoint: 3},
+		Position{Row: 1, CrossPoint: 4},
+		Position{Row: 2, CrossPoint: 5},
+		Position{Row: 3, CrossPoint: 5},
+		Position{Row: 4, CrossPoint: 5},
+		Position{Row: 5, CrossPoint: 2},
+		Position{Row: 5, CrossPoint: 3},
+		Position{Row: 5, CrossPoint: 4},
 		// capturing move:
-		BoardPosition{Row: 3, CrossPoint: 3},
+		Position{Row: 3, CrossPoint: 3},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
@@ -223,24 +223,24 @@ func TestMultipleCapturedGroups(t *testing.T) {
 		   	  ——   ——   —— ● ——   ——   ——   ——
 		 	|    |    |    |    |    |    |
 	*/
-	blackPiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 1},
-		BoardPosition{Row: 0, CrossPoint: 2},
-		BoardPosition{Row: 1, CrossPoint: 3},
-		BoardPosition{Row: 0, CrossPoint: 4},
-		BoardPosition{Row: 0, CrossPoint: 5},
+	blackPiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 1},
+		Position{Row: 0, CrossPoint: 2},
+		Position{Row: 1, CrossPoint: 3},
+		Position{Row: 0, CrossPoint: 4},
+		Position{Row: 0, CrossPoint: 5},
 	}
 
-	whitePiecesPositions := []BoardPosition{
-		BoardPosition{Row: 0, CrossPoint: 0},
-		BoardPosition{Row: 1, CrossPoint: 1},
-		BoardPosition{Row: 1, CrossPoint: 2},
-		BoardPosition{Row: 2, CrossPoint: 3},
-		BoardPosition{Row: 1, CrossPoint: 4},
-		BoardPosition{Row: 1, CrossPoint: 5},
-		BoardPosition{Row: 0, CrossPoint: 6},
+	whitePiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 0},
+		Position{Row: 1, CrossPoint: 1},
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 2, CrossPoint: 3},
+		Position{Row: 1, CrossPoint: 4},
+		Position{Row: 1, CrossPoint: 5},
+		Position{Row: 0, CrossPoint: 6},
 		// capturing move:
-		BoardPosition{Row: 0, CrossPoint: 3},
+		Position{Row: 0, CrossPoint: 3},
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)

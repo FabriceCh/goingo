@@ -16,10 +16,10 @@ func TestSetSmallHandicap(t *testing.T) {
 
 	if boardState.IsEmpty() {
 		t.Errorf("Board should not be empty after setting a valid handicap level.")
-	} else if (boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 6}) ||
-		boardState.IsPlaceEmpty(BoardPosition{Row: 6, CrossPoint: 2})) {
+	} else if (boardState.IsPlaceEmpty(Position{Row: 2, CrossPoint: 6}) ||
+		boardState.IsPlaceEmpty(Position{Row: 6, CrossPoint: 2})) {
 		t.Errorf("The selected handicap positions should not be empty.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 6}) != 1) {
+	} else if (boardState.GetPlace(Position{Row: 2, CrossPoint: 6}) != 1) {
 		t.Errorf("The handicap should always be applied for P1.")
 	}
 
@@ -28,10 +28,10 @@ func TestSetSmallHandicap(t *testing.T) {
 
 	if boardState.IsEmpty() {
 		t.Errorf("Board should not be empty after setting a valid handicap level.")
-	} else if (boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 10}) ||
-		boardState.IsPlaceEmpty(BoardPosition{Row: 10, CrossPoint: 2})) {
+	} else if (boardState.IsPlaceEmpty(Position{Row: 2, CrossPoint: 10}) ||
+		boardState.IsPlaceEmpty(Position{Row: 10, CrossPoint: 2})) {
 		t.Errorf("The selected handicap positions should not be empty.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 10}) != 1) {
+	} else if (boardState.GetPlace(Position{Row: 2, CrossPoint: 10}) != 1) {
 		t.Errorf("The handicap should always be applied for P1.")
 	}
 
@@ -40,21 +40,21 @@ func TestSetSmallHandicap(t *testing.T) {
 
 	if boardState.IsEmpty() {
 		t.Errorf("Board should not be empty after setting a valid handicap level.")
-	} else if (boardState.IsPlaceEmpty(BoardPosition{Row: 3, CrossPoint: 15}) ||
-		boardState.IsPlaceEmpty(BoardPosition{Row: 15, CrossPoint: 3}) ||
-		boardState.IsPlaceEmpty(BoardPosition{Row: 15, CrossPoint: 15})) {
+	} else if (boardState.IsPlaceEmpty(Position{Row: 3, CrossPoint: 15}) ||
+		boardState.IsPlaceEmpty(Position{Row: 15, CrossPoint: 3}) ||
+		boardState.IsPlaceEmpty(Position{Row: 15, CrossPoint: 15})) {
 		t.Errorf("The selected handicap positions should not be empty.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 3, CrossPoint: 15}) != 1) {
+	} else if (boardState.GetPlace(Position{Row: 3, CrossPoint: 15}) != 1) {
 		t.Errorf("The handicap should always be applied for P1.")
 	}
 
 	boardState, _ = Initialize(9)
-	boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})
+	boardState.Place(StoneP1, Position{Row: 0, CrossPoint: 0})
 	err = boardState.SetHandicap(2)
 
 	if err == nil {
 		t.Errorf("Settings a handicap on a non-empty board should return an error.")
-	} else if (!boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 6})) {
+	} else if (!boardState.IsPlaceEmpty(Position{Row: 2, CrossPoint: 6})) {
 		t.Errorf("The handicap should not be applied if the board is not empty.")
 	}
 

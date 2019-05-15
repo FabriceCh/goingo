@@ -13,6 +13,7 @@ func (crossPoint CrossPoint) checkPosition() {
 
 }
 
-func CheckCapture(lastPieceColor CrossPoint, lastPiecePosition BoardPosition) {
+//CheckCapture :
+func CheckCapture(lastPieceColor CrossPoint, lastPiecePosition Position) {
 
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-type HandicapPositions map[string]BoardPosition
+type HandicapPositions map[string]Position
 type HandicapLevels map[int][]string
 type HandicapSet struct {
 	positions HandicapPositions
@@ -13,23 +13,23 @@ type HandicapSet struct {
 
 var SmallBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
-		"a": BoardPosition{
+		"a": Position{
 			Row:        2,
 			CrossPoint: 6,
 		},
-		"b": BoardPosition{
+		"b": Position{
 			Row:        6,
 			CrossPoint: 2,
 		},
-		"c": BoardPosition{
+		"c": Position{
 			Row:        6,
 			CrossPoint: 6,
 		},
-		"d": BoardPosition{
+		"d": Position{
 			Row:        2,
 			CrossPoint: 2,
 		},
-		"e": BoardPosition{
+		"e": Position{
 			Row:        4,
 			CrossPoint: 4,
 		},
@@ -44,39 +44,39 @@ var SmallBoardHandicaps = HandicapSet{
 
 var MediumBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
-		"a": BoardPosition{
+		"a": Position{
 			Row:        2,
 			CrossPoint: 10,
 		},
-		"b": BoardPosition{
+		"b": Position{
 			Row:        10,
 			CrossPoint: 2,
 		},
-		"c": BoardPosition{
+		"c": Position{
 			Row:        10,
 			CrossPoint: 10,
 		},
-		"d": BoardPosition{
+		"d": Position{
 			Row:        2,
 			CrossPoint: 2,
 		},
-		"e": BoardPosition{
+		"e": Position{
 			Row:        6,
 			CrossPoint: 6,
 		},
-		"f": BoardPosition{
+		"f": Position{
 			Row:        6,
 			CrossPoint: 2,
 		},
-		"g": BoardPosition{
+		"g": Position{
 			Row:        6,
 			CrossPoint: 10,
 		},
-		"h": BoardPosition{
+		"h": Position{
 			Row:        2,
 			CrossPoint: 6,
 		},
-		"i": BoardPosition{
+		"i": Position{
 			Row:        10,
 			CrossPoint: 6,
 		},
@@ -95,39 +95,39 @@ var MediumBoardHandicaps = HandicapSet{
 
 var LargeBoardHandicaps = HandicapSet{
 	positions: HandicapPositions{
-		"a": BoardPosition{
+		"a": Position{
 			Row:        3,
 			CrossPoint: 15,
 		},
-		"b": BoardPosition{
+		"b": Position{
 			Row:        15,
 			CrossPoint: 3,
 		},
-		"c": BoardPosition{
+		"c": Position{
 			Row:        15,
 			CrossPoint: 15,
 		},
-		"d": BoardPosition{
+		"d": Position{
 			Row:        3,
 			CrossPoint: 3,
 		},
-		"e": BoardPosition{
+		"e": Position{
 			Row:        9,
 			CrossPoint: 9,
 		},
-		"f": BoardPosition{
+		"f": Position{
 			Row:        9,
 			CrossPoint: 3,
 		},
-		"g": BoardPosition{
+		"g": Position{
 			Row:        9,
 			CrossPoint: 15,
 		},
-		"h": BoardPosition{
+		"h": Position{
 			Row:        3,
 			CrossPoint: 9,
 		},
-		"i": BoardPosition{
+		"i": Position{
 			Row:        15,
 			CrossPoint: 9,
 		},
@@ -144,7 +144,7 @@ var LargeBoardHandicaps = HandicapSet{
 	},
 }
 
-func (boardState *BoardState) SetHandicap(level int) error {
+func (boardState *State) SetHandicap(level int) error {
 	if !boardState.IsEmpty() {
 		return errors.New("Board is not empty")
 	}
