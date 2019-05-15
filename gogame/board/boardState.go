@@ -22,11 +22,12 @@ const (
 	Vacant CrossPoint = iota
 	StoneP1
 	StoneP2
+	Wall
 )
 
 func Initialize(size int) (BoardState, error) {
 	if size != 9 && size != 13 && size != 19 {
-		return BoardState{}, errors.New("Invalid board size")
+		return BoardState{}, errors.New("Invalid board size. Available board sizes are: 9, 13 or 19.")
 	}
 	boardState := BoardState{
 		Rows: make([]BoardRow, size),

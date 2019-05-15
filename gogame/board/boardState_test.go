@@ -49,11 +49,11 @@ func TestGetPlace(t *testing.T) {
 	boardState.Place(StoneP1, BoardPosition{Row: 1, CrossPoint: 0})
 	boardState.Place(StoneP2, BoardPosition{Row: 2, CrossPoint: 0})
 
-	if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != 0) {
+	if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != Vacant) {
 		t.Errorf("Position (0,0) should be 0.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}) != 1) {
-		t.Errorf("Position (1,0) should be 0.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 0}) != 2) {
+	} else if (boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}) != StoneP1) {
+		t.Errorf("Position (1,0) should be 1.")
+	} else if (boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 0}) != StoneP2) {
 		t.Errorf("Position (2,0) should be 2.")
 	}
 }

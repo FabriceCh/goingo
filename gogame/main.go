@@ -14,7 +14,7 @@ var currentGame game.GameState
 var reader = bufio.NewReader(os.Stdin)
 
 func main() {
-	fmt.Println("Welcome to the go game!")
+	fmt.Println("Welcome to the go game!\nIf you are lost, you can type in \"help\" at any time to get the list of available commands.\nTo start a game, enter \"start <X>\" with X being the size of the board.")
 	for {
 		fmt.Print("→ ")
 		input, _ := reader.ReadString('\n')
@@ -44,7 +44,7 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 	case "exit":
 		os.Exit(0)
 	case "help":
-		msg = "Help command text"
+		msg = "Available commands:\n\n help: print this message.\n start <X>: start a game. X is the size of the board.\n place <X> <Y>: place a stone at given position if possible.\n exit: leave the game."
 		renderBoard = false
 		err = nil
 	case "start":
@@ -57,7 +57,7 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 		newGame, err = game.Start(size)
 		if err == nil {
 			currentGame = newGame
-			msg = fmt.Sprintf("Started a new game with a %dx%d board", size, size)
+			msg = fmt.Sprintf("Started a new game with a %dx%d board.\nYou can place a stone using the command \"place <X> <Y>\".", size, size)
 			renderBoard = true
 		}
 	default:
