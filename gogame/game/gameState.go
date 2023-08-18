@@ -83,3 +83,7 @@ func (gameState GameState) Show() {
 	gameState.board.ShowBoard()
 	fmt.Printf("\n%s's turn:\n", gameState.activePlayer.name)
 }
+
+func (gameState GameState) GetBoard() board.BoardState {
+	return gameState.board
+}

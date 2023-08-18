@@ -4,12 +4,12 @@ import "testing"
 
 func TestExecute(t *testing.T) {
 	execute("start", []string{"9"})
-	if currentGame.Board.Size() != 9 {
+	if currentGame.GetBoard().Size() != 9 {
 		t.Errorf("Starting a game of size 9 should create a 9x9 board")
 	}
 
 	execute("start", []string{"13"})
-	if currentGame.Board.Size() != 13 {
+	if currentGame.GetBoard().Size() != 13 {
 		t.Errorf("Starting a game of size 13 should create a 13x13 board")
 	}
 
