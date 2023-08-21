@@ -73,15 +73,15 @@ func TestPlace(t *testing.T) {
 	boardState, _ := Initialize(9)
 	boardState.Place(StoneP1, Position{Row: 0, CrossPoint: 0})
 
-	if (boardState.GetPlace(Position{Row: 0, CrossPoint: 0}) != 1) {
+	if (boardState.GetPlace(Position{Row: 0, CrossPoint: 0}) != StoneP1) {
 		t.Errorf("Position (0,0) should be occupied by a P1 stone.")
 	}
 
 	boardState.Place(StoneP2, Position{Row: 1, CrossPoint: 0})
 
-	if (boardState.GetPlace(Position{Row: 0, CrossPoint: 0}) != 1) {
+	if (boardState.GetPlace(Position{Row: 0, CrossPoint: 0}) != StoneP1) {
 		t.Errorf("The stone at (0,0) should not have been modified.")
-	} else if (boardState.GetPlace(Position{Row: 1, CrossPoint: 0}) != 2) {
+	} else if (boardState.GetPlace(Position{Row: 1, CrossPoint: 0}) != StoneP2) {
 		t.Errorf("Position (1,0) should be occupied by a P2 stone.")
 	}
 

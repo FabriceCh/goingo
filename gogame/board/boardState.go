@@ -54,14 +54,25 @@ func Initialize(size int) (State, error) {
 	return boardState, nil
 }
 
+func (boardState *State) isPositionOnBoard(position Position) bool {
+	if position.Row >= boardState.Size() || position.CrossPoint >= boardState.Size() {
+		return false
+	}
+	if position.Row < 0 || position.CrossPoint < 0 {
+		return false
+	}
+	return true
+}
+
 // Place : place a stone on the board
 func (boardState *State) Place(stone CrossPoint, position Position) error {
-	if position.Row >= boardState.Size() || position.CrossPoint >= boardState.Size() {
+	if !boardState.isPositionOnBoard(position) {
 		return errors.New("Position not on the board")
 	} else if !boardState.IsPlaceEmpty(position) {
 		return errors.New("Board position not empty")
 	} else {
 		boardState.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
+		checkCapture(boardState, stone, position)
 		return nil
 	}
 }
@@ -73,7 +84,10 @@ func (boardState State) Size() int {
 
 // GetPlace : returns the type of the item on a given position
 func (boardState State) GetPlace(position Position) CrossPoint {
-	return boardState.Rows[position.Row].CrossPoints[position.CrossPoint]
+	if boardState.isPositionOnBoard(position) {
+		return boardState.Rows[position.Row].CrossPoints[position.CrossPoint]
+	}
+	return Wall
 }
 
 // IsPlaceEmpty :
@@ -91,4 +105,15 @@ func (boardState State) IsEmpty() bool {
 		}
 	}
 	return true
+}
+
+func (boardState State) removeStone(position Position) error {
+	if !boardState.isPositionOnBoard(position) {
+		return errors.New("Position not on the board")
+	} else if boardState.IsPlaceEmpty(position) {
+		return errors.New("There is no stone to remove at this position")
+	} else {
+		boardState.Rows[position.Row].CrossPoints[position.CrossPoint] = Vacant
+		return nil
+	}
 }

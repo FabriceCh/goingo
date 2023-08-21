@@ -1,6 +1,7 @@
 package board
 
 import "testing"
+import "fmt"
 
 func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []Position, whitePiecesPositions []Position) {
 	// set this to false to remove board output from tests
@@ -26,6 +27,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []Position, white
 	}
 
 	if visuals {
+		fmt.Println("before")
 		boardState.ShowBoard()
 	}
 
@@ -33,6 +35,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []Position, white
 	boardState.Place(StoneP2, whitePiecesPositions[lastWhiteStoneIndex])
 
 	if visuals {
+		fmt.Println("after")
 		boardState.ShowBoard()
 	}
 
@@ -52,6 +55,25 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []Position, white
 
 }
 
+func TestNoCapture(t *testing.T) {
+	boardState, _ := Initialize(9)
+
+	boardState.Place(StoneP1, Position{Row: 0, CrossPoint: 0})
+	boardState.Place(StoneP2, Position{Row: 0, CrossPoint: 1})
+
+	if (boardState.IsPlaceEmpty(Position{Row: 0, CrossPoint: 0})) {
+		t.Errorf("The stone should not be captured")
+	}
+}
+
+func TestGetAdjacentPositions(t *testing.T) {
+	position := Position{Row: 2, CrossPoint: 3}
+	adjacentPositions := getAdjacentPositions(position)
+	if adjacentPositions[0].CrossPoint != 4 {
+		t.Errorf("Adjacent positions are not right")
+	}
+}
+
 func TestSimpleSingleCapture(t *testing.T) {
 	/*
 	    |    |    |
@@ -62,6 +84,8 @@ func TestSimpleSingleCapture(t *testing.T) {
 	 ——   —— x ——   ——
 	    |    |    |
 	*/
+
+	fmt.Println("TestSingleCapture")
 
 	blackPiecesPositions := []Position{
 		Position{Row: 2, CrossPoint: 2},
@@ -160,6 +184,98 @@ func TestGroupCapture(t *testing.T) {
 
 }
 
+func TestMultipleGroupCapture(t *testing.T) {
+	/*
+	   ——   ——   —— ● ——   ——   ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	   ——   —— ● —— ○ —— ● ——   ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	   —— ● —— ● —— ○ —— ● —— ● ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	 ● —— ○ —— ○ —— x —— ○ —— ○ —— ● ——   ——
+	 |    |    |    |    |    |    |    |    |
+	   —— ● —— ● —— ○ —— ● —— ● ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	   ——   —— ● —— ○ —— ● ——   ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	   ——   ——   —— ● ——   ——   ——   ——   ——
+	 |    |    |    |    |    |    |    |    |
+	*/
+
+	blackPiecesPositions := []Position{
+		Position{Row: 3, CrossPoint: 1},
+		Position{Row: 3, CrossPoint: 2},
+		Position{Row: 3, CrossPoint: 4},
+		Position{Row: 3, CrossPoint: 5},
+		Position{Row: 1, CrossPoint: 3},
+		Position{Row: 2, CrossPoint: 3},
+		Position{Row: 4, CrossPoint: 3},
+		Position{Row: 5, CrossPoint: 3},
+	}
+
+	whitePiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 3},
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 1, CrossPoint: 4},
+		Position{Row: 2, CrossPoint: 1},
+		Position{Row: 2, CrossPoint: 2},
+		Position{Row: 2, CrossPoint: 4},
+		Position{Row: 2, CrossPoint: 5},
+		Position{Row: 3, CrossPoint: 0},
+		Position{Row: 3, CrossPoint: 6},
+		Position{Row: 4, CrossPoint: 1},
+		Position{Row: 4, CrossPoint: 2},
+		Position{Row: 4, CrossPoint: 4},
+		Position{Row: 4, CrossPoint: 5},
+		Position{Row: 5, CrossPoint: 2},
+		Position{Row: 5, CrossPoint: 4},
+		Position{Row: 6, CrossPoint: 3},
+		// capturing move:
+		Position{Row: 3, CrossPoint: 3},
+	}
+
+	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
+
+}
+
+func TestGroupAgainstWallCapture(t *testing.T) {
+	/*
+	 ● —— ○ —— ○ —— ○ —— ○ —— ● ——
+	 |    |    |    |    |    |
+	 ● —— ○ —— ○ —— ○ —— ● ——   ——
+	 |    |    |    |    |    |
+	   —— ● —— ○ —— x ——   ——   ——
+	 |    |    |    |    |    |
+	   ——   —— ● ——   ——   ——   ——
+	 |    |    |    |    |    |
+	*/
+
+	blackPiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 1},
+		Position{Row: 0, CrossPoint: 2},
+		Position{Row: 0, CrossPoint: 3},
+		Position{Row: 0, CrossPoint: 4},
+		Position{Row: 1, CrossPoint: 1},
+		Position{Row: 1, CrossPoint: 2},
+		Position{Row: 1, CrossPoint: 3},
+		Position{Row: 2, CrossPoint: 2},
+	}
+
+	whitePiecesPositions := []Position{
+		Position{Row: 0, CrossPoint: 0},
+		Position{Row: 0, CrossPoint: 5},
+		Position{Row: 1, CrossPoint: 0},
+		Position{Row: 1, CrossPoint: 4},
+		Position{Row: 2, CrossPoint: 1},
+		Position{Row: 3, CrossPoint: 2},
+		// capturing move:
+		Position{Row: 2, CrossPoint: 3},
+	}
+
+	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
+
+}
+
 func TestEyeCapture(t *testing.T) {
 	/*
 	   ——   ——   ——   ——   ——   ——   ——   ——
@@ -214,13 +330,13 @@ func TestEyeCapture(t *testing.T) {
 
 }
 
-func TestMultipleCapturedGroups(t *testing.T) {
+func TestMultipleCapturedGroupsAgainstWall(t *testing.T) {
 	/*
 			● —— ○ —— ○ —— x —— ○ —— ○ —— ● ——
 		 	|    |    |    |    |    |    |
 			  —— ● —— ● —— ○ —— ● —— ● ——   ——
 		 	|    |    |    |    |    |    |
-		   	  ——   ——   —— ● ——   ——   ——   ——
+		    ——   ——   —— ● ——   ——   ——   ——
 		 	|    |    |    |    |    |    |
 	*/
 	blackPiecesPositions := []Position{
