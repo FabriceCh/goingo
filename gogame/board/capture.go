@@ -40,25 +40,28 @@ func getOpponentColor(playerColor CrossPoint) CrossPoint {
 	}
 }
 
-func (board *BoardState) CheckCapture(lastPieceColor CrossPoint, lastPiecePosition BoardPosition) {
+func (board *BoardState) CheckCapture(lastPieceColor CrossPoint, lastPiecePosition BoardPosition) (points int) {
 
 	opponentColor := getOpponentColor(lastPieceColor)
 
 	var groups []Set
 	adjacentPositions := board.getNeighbours(lastPiecePosition)
 	for _, adjacentPos := range adjacentPositions {
-		// skip to avoid duplicated groups
 		if isPositionInAGroup(adjacentPos, groups) {
+			// skip to avoid duplicated groups
 			continue
 		}
 		groups = append(groups, board.findGroup(opponentColor, adjacentPos))
 	}
 
+	points = 0
 	for _, g := range groups {
 		for pos := range g {
 			board.Capture(pos)
+			points++
 		}
 	}
+	return points
 }
 
 func isPositionInAGroup(pos BoardPosition, groups []Set) bool {

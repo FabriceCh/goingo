@@ -85,7 +85,7 @@ func TestPlace(t *testing.T) {
 		t.Errorf("Position (1,0) should be occupied by a P2 stone.")
 	}
 
-	err := boardState.Place(StoneP2, BoardPosition{Row: 0, CrossPoint: 0})
+	_, err := boardState.Place(StoneP2, BoardPosition{Row: 0, CrossPoint: 0})
 
 	if err == nil {
 		t.Errorf("Placing a stone on another stone should return an error.")
@@ -94,7 +94,7 @@ func TestPlace(t *testing.T) {
 	}
 
 	boardState, _ = Initialize(9)
-	err = boardState.Place(StoneP1, BoardPosition{Row: 10, CrossPoint: 0})
+	_, err = boardState.Place(StoneP1, BoardPosition{Row: 10, CrossPoint: 0})
 
 	if err == nil {
 		t.Errorf("Placing a stone outside of the board should return an error.")

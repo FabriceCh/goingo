@@ -53,15 +53,15 @@ func (b *BoardState) Capture(position BoardPosition) {
 	b.Rows[position.Row].CrossPoints[position.CrossPoint] = Vacant
 }
 
-func (b *BoardState) Place(stone CrossPoint, position BoardPosition) error {
+func (b *BoardState) Place(stone CrossPoint, position BoardPosition) (int, error) {
 	if !b.IsWithinBounds(position) {
-		return errors.New("position not on the board")
+		return 0, errors.New("position not on the board")
 	} else if !b.IsPlaceEmpty(position) {
-		return errors.New("board position not empty")
+		return 0, errors.New("board position not empty")
 	} else {
 		b.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
-		b.CheckCapture(stone, position)
-		return nil
+		points := b.CheckCapture(stone, position)
+		return points, nil
 	}
 }
 
