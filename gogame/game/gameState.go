@@ -3,7 +3,7 @@ package game
 import (
 	"errors"
 	"fmt"
-	"git-gogame/gogame/board"
+	"goingo/gogame/board"
 	"strconv"
 )
 
@@ -81,4 +81,8 @@ func (gameState GameState) Show() {
 
 func (gameState GameState) GetBoard() board.BoardState {
 	return gameState.board
+}
+
+func (g GameState) GetBoardSize() int {
+	return g.board.Size()
 }

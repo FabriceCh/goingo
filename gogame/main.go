@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"git-gogame/gogame/game"
+	"goingo/gogame/game"
 	"os"
 	"strconv"
 	"strings"

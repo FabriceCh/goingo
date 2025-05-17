@@ -2,6 +2,7 @@ package board
 
 import (
 	"errors"
+	"fmt"
 )
 
 //Representing the game according to official rules and terminology from wikipedia
@@ -18,6 +19,10 @@ type BoardPosition struct {
 	Row, CrossPoint int
 }
 
+func (bp *BoardPosition) toString() string {
+	return fmt.Sprintf("%v", bp)
+}
+
 const (
 	Vacant CrossPoint = iota
 	StoneP1
@@ -27,16 +32,16 @@ const (
 
 func Initialize(size int) (BoardState, error) {
 	if size != 9 && size != 13 && size != 19 {
-		return BoardState{}, errors.New("Invalid board size. Available board sizes are: 9, 13 or 19.")
+		return BoardState{}, errors.New("invalid board size: available board sizes are 9, 13 and 19")
 	}
 	boardState := BoardState{
 		Rows: make([]BoardRow, size),
 	}
-	for i := 0; i < size; i++ {
+	for i := range size {
 		row := BoardRow{
 			CrossPoints: make([]CrossPoint, size),
 		}
-		for j := 0; j < size; j++ {
+		for j := range size {
 			row.CrossPoints[j] = Vacant
 		}
 		boardState.Rows[i] = row
@@ -44,37 +49,52 @@ func Initialize(size int) (BoardState, error) {
 	return boardState, nil
 }
 
-func (boardState *BoardState) Place(stone CrossPoint, position BoardPosition) error {
-	if position.Row >= boardState.Size() || position.CrossPoint >= boardState.Size() {
-		return errors.New("Position not on the board")
-	} else if !boardState.IsPlaceEmpty(position) {
-		return errors.New("Board position not empty")
+func (b *BoardState) Capture(position BoardPosition) {
+	b.Rows[position.Row].CrossPoints[position.CrossPoint] = Vacant
+}
+
+func (b *BoardState) Place(stone CrossPoint, position BoardPosition) error {
+	if !b.IsWithinBounds(position) {
+		return errors.New("position not on the board")
+	} else if !b.IsPlaceEmpty(position) {
+		return errors.New("board position not empty")
 	} else {
-		boardState.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
+		b.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
+		b.CheckCapture(stone, position)
 		return nil
 	}
 }
 
-func (boardState BoardState) Size() int {
-	return len(boardState.Rows)
+func (b *BoardState) Size() int {
+	return len(b.Rows)
 }
 
-func (boardState BoardState) GetPlace(position BoardPosition) CrossPoint {
-	return boardState.Rows[position.Row].CrossPoints[position.CrossPoint]
+func (b *BoardState) IsWithinBounds(pos BoardPosition) bool {
+	return pos.Row < b.Size() && pos.Row > -1 && pos.CrossPoint < b.Size() && pos.CrossPoint > -1
 }
 
-func (boardState BoardState) IsPlaceEmpty(position BoardPosition) bool {
-	return boardState.GetPlace(position) == Vacant
+func (b *BoardState) GetPlace(position BoardPosition) CrossPoint {
+	if !b.IsWithinBounds(position) {
+		return Wall
+	}
+	return b.Rows[position.Row].CrossPoints[position.CrossPoint]
+}
+
+func (b *BoardState) IsPlaceEmpty(position BoardPosition) bool {
+	if !b.IsWithinBounds(position) {
+		return false
+	}
+	return b.GetPlace(position) == Vacant
 }
 
 /*
 *	IsEmpty
 *   function that determines if the board is empty
  */
-func (boardState BoardState) IsEmpty() bool {
-	for i, _ := range boardState.Rows {
-		for j, _ := range boardState.Rows[i].CrossPoints {
-			if !boardState.IsPlaceEmpty(BoardPosition{Row: i, CrossPoint: j}) {
+func (b *BoardState) IsEmpty() bool {
+	for i := range b.Rows {
+		for j := range b.Rows[i].CrossPoints {
+			if !b.IsPlaceEmpty(BoardPosition{Row: i, CrossPoint: j}) {
 				return false
 			}
 		}

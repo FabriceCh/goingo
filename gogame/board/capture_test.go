@@ -1,10 +1,12 @@
 package board
 
-import "testing"
+import (
+	"testing"
+)
 
 func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, whitePiecesPositions []BoardPosition) {
 	// set this to false to remove board output from tests
-	visuals := true
+	visuals := false
 
 	boardState, _ := Initialize(9)
 
@@ -15,7 +17,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 
 	lastWhiteStoneIndex := len(whitePiecesPositions) - 1
 	// place white stones until black's are almost captured
-	for i := 0; i < lastWhiteStoneIndex; i++ {
+	for i := range lastWhiteStoneIndex {
 		boardState.Place(StoneP2, whitePiecesPositions[i])
 	}
 
@@ -244,4 +246,38 @@ func TestMultipleCapturedGroups(t *testing.T) {
 	}
 
 	testWhiteCapturesBlack(t, blackPiecesPositions, whitePiecesPositions)
+}
+
+func testFindGroup(t *testing.T, blackPiecesPositions []BoardPosition, whitePiecesPositions []BoardPosition, empty bool) {
+	boardState, _ := Initialize(9)
+	for _, pos := range blackPiecesPositions {
+		boardState.Place(StoneP1, pos)
+	}
+	for _, pos := range whitePiecesPositions {
+		boardState.Place(StoneP2, pos)
+	}
+	group := boardState.findGroup(StoneP1, blackPiecesPositions[0])
+	if empty {
+		if len(group) != 0 {
+			t.Errorf("group should be empty but was of length %v", len(group))
+		}
+	} else if len(group) != len(blackPiecesPositions) {
+		t.Errorf("found group is not the right length, expected %v, got %v", len(blackPiecesPositions), len(group))
+	}
+}
+
+func TestGroupShouldBeEmpty(t *testing.T) {
+
+	blackPiecesPositions := []BoardPosition{
+		{Row: 2, CrossPoint: 2},
+		{Row: 1, CrossPoint: 2},
+	}
+
+	whitePiecesPositions := []BoardPosition{
+		{Row: 2, CrossPoint: 1},
+		{Row: 2, CrossPoint: 3},
+		// capturing move:
+		{Row: 3, CrossPoint: 2},
+	}
+	testFindGroup(t, blackPiecesPositions, whitePiecesPositions, true)
 }

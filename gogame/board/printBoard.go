@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-func (boardState BoardState) ShowBoard() {
-	var dimension = boardState.Size()
+func (b *BoardState) ShowBoard() {
+	var dimension = b.Size()
 
-	for i := 0; i < dimension; i++ {
+	for i := range dimension {
 		var line = ""
 		var vertBarsLine = " "
 		for j := 0; j < dimension; j++ {
-			var elementAtPlace = BoardState.GetPlace(boardState, BoardPosition{Row: i, CrossPoint: j})
+			var elementAtPlace = b.GetPlace(BoardPosition{Row: i, CrossPoint: j})
 			var elementString string
 			switch elementAtPlace {
 			case Vacant:
