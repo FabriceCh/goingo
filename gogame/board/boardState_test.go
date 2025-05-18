@@ -1,47 +1,40 @@
 package board
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestInitialize(t *testing.T) {
 	boardState, err := Initialize(9)
-	if boardState.Size() != 9 {
-		t.Errorf("Initialized board states should be 9x9")
-	} else if !boardState.IsEmpty() {
-		t.Errorf("Initialized board states should be empty")
-	}
+	assert.Equal(t, 9, boardState.Size())
+	assert.True(t, boardState.IsEmpty())
+	assert.NoError(t, err)
 
 	boardState, err = Initialize(13)
-	if boardState.Size() != 13 {
-		t.Errorf("Initialized board states should be 13x13")
-	} else if !boardState.IsEmpty() {
-		t.Errorf("Initialized board states should be empty")
-	}
+	assert.Equal(t, 13, boardState.Size())
+	assert.True(t, boardState.IsEmpty())
+	assert.NoError(t, err)
 
+	// 10 is not a valid option
 	boardState, err = Initialize(10)
-	if err == nil {
-		t.Errorf("Initializing with invalid board size should return an error")
-	}
+	assert.Error(t, err)
 }
 
 func TestIsEmpty(t *testing.T) {
 	boardState, _ := Initialize(9)
+	assert.True(t, boardState.IsEmpty())
 
-	if !boardState.IsEmpty() {
-		t.Errorf("IsEmpty should be true when the board is empty")
-	}
-
-	boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})
-
-	if boardState.IsEmpty() {
-		t.Errorf("IsEmpty should be false when the board is not empty")
-	}
+	points, err := boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})
+	assert.False(t, boardState.IsEmpty())
+	assert.Zero(t, points)
+	assert.NoError(t, err)
 }
 
 func TestSize(t *testing.T) {
 	boardState, _ := Initialize(9)
-	if boardState.Size() != 9 {
-		t.Errorf("Size for a 9x9 board should be 9.")
-	}
+	assert.Equal(t, 9, boardState.Size())
 }
 
 func TestGetPlace(t *testing.T) {
@@ -49,56 +42,40 @@ func TestGetPlace(t *testing.T) {
 	boardState.Place(StoneP1, BoardPosition{Row: 1, CrossPoint: 0})
 	boardState.Place(StoneP2, BoardPosition{Row: 2, CrossPoint: 0})
 
-	if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != Vacant) {
-		t.Errorf("Position (0,0) should be 0.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}) != StoneP1) {
-		t.Errorf("Position (1,0) should be 1.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 0}) != StoneP2) {
-		t.Errorf("Position (2,0) should be 2.")
-	}
+	assert.Equal(t, Vacant, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}))
+	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}))
+	assert.Equal(t, StoneP2, boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 0}))
 }
 
 func TestIsPlaceEmpty(t *testing.T) {
 	boardState, _ := Initialize(9)
 	boardState.Place(StoneP1, BoardPosition{Row: 1, CrossPoint: 0})
 
-	if (!boardState.IsPlaceEmpty(BoardPosition{Row: 0, CrossPoint: 0})) {
-		t.Errorf("Position (0,0) should be empty.")
-	} else if (boardState.IsPlaceEmpty(BoardPosition{Row: 1, CrossPoint: 0})) {
-		t.Errorf("Position (1,0) should not be empty.")
-	}
+	assert.True(t, boardState.IsPlaceEmpty(BoardPosition{Row: 0, CrossPoint: 0}))
+	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 1, CrossPoint: 0}))
 }
 
 func TestPlace(t *testing.T) {
 	boardState, _ := Initialize(9)
 	boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})
-
-	if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != 1) {
-		t.Errorf("Position (0,0) should be occupied by a P1 stone.")
-	}
+	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+		"Position (0,0) should be occupied by a P1 stone.")
 
 	boardState.Place(StoneP2, BoardPosition{Row: 1, CrossPoint: 0})
 
-	if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != 1) {
-		t.Errorf("The stone at (0,0) should not have been modified.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}) != 2) {
-		t.Errorf("Position (1,0) should be occupied by a P2 stone.")
-	}
+	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+		"The stone at (0,0) should not have been modified.")
+	assert.Equal(t, StoneP2, boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}),
+		"Position (1,0) should be occupied by a P2 stone.")
 
 	_, err := boardState.Place(StoneP2, BoardPosition{Row: 0, CrossPoint: 0})
-
-	if err == nil {
-		t.Errorf("Placing a stone on another stone should return an error.")
-	} else if (boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}) != 1) {
-		t.Errorf("Position (0,0) should still be occupied by a P1 stone.")
-	}
+	assert.Error(t, err, "Placing a stone on another stone should return an error.")
+	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+		"Position (0,0) should still be occupied by a P1 stone.")
 
 	boardState, _ = Initialize(9)
 	_, err = boardState.Place(StoneP1, BoardPosition{Row: 10, CrossPoint: 0})
-
-	if err == nil {
-		t.Errorf("Placing a stone outside of the board should return an error.")
-	} else if !boardState.IsEmpty() {
-		t.Errorf("The board should be empty after trying to place a stone on an invalid position.")
-	}
+	assert.Error(t, err, "Placing a stone outside of the board should return an error.")
+	assert.True(t, boardState.IsEmpty(),
+		"The board should be empty after trying to place a stone on an invalid position.")
 }

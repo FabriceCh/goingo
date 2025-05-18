@@ -1,7 +1,10 @@
 package board
 
 import (
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, whitePiecesPositions []BoardPosition) {
@@ -37,7 +40,6 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 	if visuals {
 		boardState.ShowBoard()
 	}
-
 	for _, pos := range blackPiecesPositions {
 		if !boardState.IsPlaceEmpty(pos) {
 			t.Errorf("Position (%d,%d) should be empty because of a capture.", pos.Row, pos.CrossPoint)
@@ -49,8 +51,6 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 			t.Errorf("Position (%d,%d) should still have white stones.", pos.Row, pos.CrossPoint)
 		}
 	}
-
-	//TODO: also check if the points for the right player went up by the correct amount
 
 }
 
@@ -258,6 +258,7 @@ func testFindGroup(t *testing.T, blackPiecesPositions []BoardPosition, whitePiec
 	}
 	group := boardState.findGroup(StoneP1, blackPiecesPositions[0])
 	if empty {
+		assert.Empty(t, group, fmt.Sprintf("group should be empty but was of length %v", len(group)))
 		if len(group) != 0 {
 			t.Errorf("group should be empty but was of length %v", len(group))
 		}
