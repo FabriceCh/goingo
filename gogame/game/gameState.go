@@ -13,6 +13,7 @@ type GameState struct {
 	player1      *Player
 	player2      *Player
 	activePlayer *Player
+	history      History
 }
 
 type Player struct {
@@ -21,58 +22,90 @@ type Player struct {
 	points int
 }
 
-func Start(size int) (GameState, error) {
+func NewGameState(size int) (GameState, error) {
 	boardState, err := board.Initialize(size)
-	player1 := Player{name: "Player 1 (○ )", stone: board.StoneP1, points: 0}
-	player2 := Player{name: "Player 2 (● )", stone: board.StoneP2, points: 0}
-	return GameState{
+	player1 := &Player{name: "Player 1 (○ )", stone: board.StoneP1, points: 0}
+	player2 := &Player{name: "Player 2 (● )", stone: board.StoneP2, points: 0}
+	gameState := GameState{
 		isActive:     true,
 		board:        boardState,
-		player1:      &player1,
-		player2:      &player2,
-		activePlayer: &player1,
-	}, err
+		player1:      player1,
+		player2:      player2,
+		activePlayer: player1,
+	}
+	gameState.SaveTurn()
+	return gameState, err
 }
 
-func (g *GameState) ExecuteCommand(command string, args []string) (msg string, err error) {
+func (g *GameState) ExecuteCommandFromCli(commandName CommandName, args []string) (msg string, err error) {
 	if !g.isActive {
-		err = errors.New("No active game")
-		msg = ""
+		err = errors.New("no active game")
 		return
 	}
-	switch command {
-	case "handicap":
+
+	var command Command
+	switch commandName {
+	case CommandHandicap:
 		if len(args) < 1 {
-			err = errors.New("Too few arguments")
+			err = errors.New("too few arguments for handicap command")
 			return
 		}
 		level, _ := strconv.Atoi(args[0])
-		err = g.board.SetHandicap(level)
+		command = NewHandicapCommand(g.activePlayer.stone, level)
 		msg = fmt.Sprintf("Set handicap of level %d for Player 1", level)
-	case "place":
+	case CommandPlace:
 		if len(args) < 2 {
-			err = errors.New("Too few arguments")
+			err = errors.New("too few arguments for place command")
 			return
 		}
 		row, _ := strconv.Atoi(args[0])
 		crossPoint, _ := strconv.Atoi(args[1])
-		err := g.Place(row, crossPoint)
-		if err != nil {
-			return "", err
-		}
+		command = NewPlaceCommand(g.activePlayer.stone, row, crossPoint)
 		msg = fmt.Sprintf("Placed a stone at (%d,%d) for %s", row, crossPoint, g.activePlayer.name)
-	default:
-		err = errors.New("Invalid command")
-		msg = ""
+	case CommandPass:
+		command = NewPassCommand(g.activePlayer.stone)
+	case CommandUndo:
+		command = NewUndoCommand()
 	}
-	return msg, err
+
+	if command == nil {
+		err = errors.New("invalid command name -- if running from cli, this is a big problem")
+	} else {
+		err = command.Execute(g)
+	}
+
+	if err != nil {
+		return "", err
+	}
+
+	return
 }
 
-func (g *GameState) EndTurn() {
+func (g *GameState) switchActivePlayer() {
 	if g.activePlayer == g.player1 {
 		g.activePlayer = g.player2
 	} else {
 		g.activePlayer = g.player1
+	}
+}
+
+func (g *GameState) SaveTurn() {
+	newTurn := NewTurn(*g)
+	g.history.Push(newTurn)
+}
+
+func (g *GameState) EndTurn() {
+	g.switchActivePlayer()
+}
+
+func (g *GameState) LoadTurn(turn Turn) {
+	g.board = turn.BoardState
+	g.player1.points = turn.P1Points
+	g.player2.points = turn.P2Points
+	if turn.ActivePlayerColor == board.StoneP1 {
+		g.activePlayer = g.player1
+	} else {
+		g.activePlayer = g.player2
 	}
 }
 
@@ -88,13 +121,4 @@ func (g GameState) GetBoard() board.BoardState {
 
 func (g GameState) GetBoardSize() int {
 	return g.board.Size()
-}
-
-func (g GameState) Place(row int, crossPoint int) error {
-	points, err := g.board.Place(g.activePlayer.stone, board.BoardPosition{Row: row, CrossPoint: crossPoint})
-	if err != nil {
-		return err
-	}
-	g.activePlayer.points += points
-	return nil
 }

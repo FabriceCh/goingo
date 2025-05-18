@@ -2,7 +2,6 @@ package board
 
 import (
 	"errors"
-	"fmt"
 )
 
 //Representing the game according to official rules and terminology from wikipedia
@@ -17,10 +16,6 @@ type BoardRow struct {
 type CrossPoint int
 type BoardPosition struct {
 	Row, CrossPoint int
-}
-
-func (bp *BoardPosition) toString() string {
-	return fmt.Sprintf("%v", bp)
 }
 
 const (
@@ -100,4 +95,20 @@ func (b *BoardState) IsEmpty() bool {
 		}
 	}
 	return true
+}
+
+func (b *BoardState) DeepCopy() BoardState {
+	copiedBoardState := BoardState{
+		Rows: make([]BoardRow, b.Size()),
+	}
+	for i := range b.Size() {
+		row := BoardRow{
+			CrossPoints: make([]CrossPoint, b.Size()),
+		}
+		for j := range b.Size() {
+			row.CrossPoints[j] = b.GetPlace(BoardPosition{Row: i, CrossPoint: j})
+		}
+		copiedBoardState.Rows[i] = row
+	}
+	return copiedBoardState
 }

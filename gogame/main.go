@@ -26,9 +26,6 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			if command == "place" {
-				currentGame.EndTurn()
-			}
 			if msg != "" {
 				fmt.Println(msg)
 			}
@@ -44,7 +41,12 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 	case "exit":
 		os.Exit(0)
 	case "help":
-		msg = "Available commands:\n\n help: print this message.\n start <X>: start a game. X is the size of the board.\n place <X> <Y>: place a stone at given position if possible.\n exit: leave the game."
+		msg = `Available commands:\n\n
+		help: print this message.\n
+		start <X>: start a game. X is the size of the board.\n
+		place <X> <Y>: place a stone at given position if possible.\n
+		pass: skip your turn without placing any stone.\n
+		exit: leave the game.`
 		renderBoard = false
 		err = nil
 	case "start":
@@ -54,14 +56,18 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 		}
 		size, _ := strconv.Atoi(args[0])
 		var newGame game.GameState
-		newGame, err = game.Start(size)
+		newGame, err = game.NewGameState(size)
 		if err == nil {
 			currentGame = newGame
 			msg = fmt.Sprintf("Started a new game with a %dx%d board.\nYou can place a stone using the command \"place <X> <Y>\".", size, size)
 			renderBoard = true
 		}
 	default:
-		msg, err = currentGame.ExecuteCommand(command, args)
+		gameCommand, err := game.StringToCommand(command)
+		if err != nil {
+			return "", false, err
+		}
+		msg, err = currentGame.ExecuteCommandFromCli(gameCommand, args)
 		renderBoard = err == nil
 	}
 	return

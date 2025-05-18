@@ -1,0 +1,146 @@
+package game
+
+import (
+	"fmt"
+	"goingo/gogame/board"
+)
+
+type CommandName string
+
+const (
+	CommandPlace    CommandName = "place"
+	CommandPass     CommandName = "pass"
+	CommandHandicap CommandName = "handicap"
+	CommandUndo     CommandName = "undo"
+)
+
+func StringToCommand(str string) (command CommandName, err error) {
+	switch str {
+	case string(CommandPlace):
+		command = CommandPlace
+	case string(CommandPass):
+		command = CommandPass
+	case string(CommandHandicap):
+		command = CommandHandicap
+	case string(CommandUndo):
+		command = CommandUndo
+	default:
+		err = fmt.Errorf("could not map '%v' to any known command", str)
+	}
+	return
+}
+
+type Command interface {
+	Execute(gameState *GameState) error
+}
+
+type BaseCommand struct {
+	Name  CommandName
+	Color board.CrossPoint
+}
+
+// Handicap
+type HandicapCommand struct {
+	BaseCommand
+	Level int
+}
+
+func (p HandicapCommand) Execute(g *GameState) error {
+	err := g.board.SetHandicap(p.Level)
+	return err
+}
+
+func NewHandicapCommand(color board.CrossPoint, level int) HandicapCommand {
+	return HandicapCommand{
+		BaseCommand: BaseCommand{
+			Name:  CommandHandicap,
+			Color: color,
+		},
+		Level: level,
+	}
+}
+
+var _ Command = HandicapCommand{}       // Verify that T implements I.
+var _ Command = (*HandicapCommand)(nil) // Verify that *T implements I.
+
+// PASS
+type PassCommand struct {
+	BaseCommand
+}
+
+func (p PassCommand) Execute(g *GameState) error {
+	g.SaveTurn()
+	g.EndTurn()
+	return nil
+}
+
+func NewPassCommand(color board.CrossPoint) PassCommand {
+	return PassCommand{
+		BaseCommand: BaseCommand{
+			Name:  CommandPass,
+			Color: color,
+		},
+	}
+}
+
+var _ Command = PassCommand{}       // Verify that T implements I.
+var _ Command = (*PassCommand)(nil) // Verify that *T implements I.
+
+// PLACE
+type PlaceCommand struct {
+	BaseCommand
+	Row        int
+	CrossPoint int
+}
+
+func (p PlaceCommand) Execute(g *GameState) error {
+	g.SaveTurn()
+	points, err := g.board.Place(g.activePlayer.stone, board.BoardPosition{Row: p.Row, CrossPoint: p.CrossPoint})
+	if err != nil {
+		_, _ = g.history.Pop()
+		return err
+	}
+	g.activePlayer.points += points
+
+	g.EndTurn()
+	return nil
+}
+
+var _ Command = PlaceCommand{}       // Verify that T implements I.
+var _ Command = (*PlaceCommand)(nil) // Verify that *T implements I.
+
+func NewPlaceCommand(color board.CrossPoint, row int, crossPoint int) PlaceCommand {
+	return PlaceCommand{
+		BaseCommand: BaseCommand{
+			Name:  CommandPlace,
+			Color: color,
+		},
+		Row:        row,
+		CrossPoint: crossPoint,
+	}
+}
+
+// UNDO
+type UndoCommand struct {
+	BaseCommand
+}
+
+func (p UndoCommand) Execute(g *GameState) error {
+	previousTurn, err := g.history.Pop()
+	if err != nil {
+		return err
+	}
+	g.LoadTurn(*previousTurn)
+	return nil
+}
+
+var _ Command = UndoCommand{}       // Verify that T implements I.
+var _ Command = (*UndoCommand)(nil) // Verify that *T implements I.
+
+func NewUndoCommand() UndoCommand {
+	return UndoCommand{
+		BaseCommand: BaseCommand{
+			Name: CommandUndo,
+		},
+	}
+}

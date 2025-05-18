@@ -1,71 +1,75 @@
 package game
 
-import "testing"
+import (
+	"testing"
 
-func TestStart(t *testing.T) {
-	gameState, err := Start(9)
-	if gameState.board.Size() != 9 {
-		t.Errorf("A started game of size 9 should have a 9x9 game board")
-	}
-	if gameState.activePlayer != gameState.player1 {
-		t.Errorf("The first active player should always be Player 1")
-	}
+	"github.com/stretchr/testify/assert"
+)
 
-	gameState, err = Start(13)
-	if gameState.board.Size() != 13 {
-		t.Errorf("A started game of size 13 should have a 13x13 game board")
-	}
+func TestNewGameState(t *testing.T) {
+	gameState, err := NewGameState(9)
+	assert.NoError(t, err)
+	assert.Equal(t, 9, gameState.board.Size(), "A started game of size 9 should have a 9x9 game board")
+	assert.Equal(t, gameState.player1, gameState.activePlayer, "The first active player should always be Player 1")
 
-	gameState, err = Start(10)
-	if err == nil {
-		t.Errorf("Starting a game of invalid size should return an error")
-	}
+	gameState, err = NewGameState(13)
+	assert.NoError(t, err)
+	assert.Equal(t, 13, gameState.board.Size(), "A started game of size 13 should have a 13x13 game board")
+
+	gameState, err = NewGameState(10)
+	assert.Error(t, err, "Starting a game of invalid size should return an error")
 }
 
 func TestExecuteCommand(t *testing.T) {
-	gameState, err := Start(9)
+	gameState, err := NewGameState(9)
+	assert.NoError(t, err)
 
-	gameState.ExecuteCommand("handicap", []string{"2"})
-	if gameState.board.IsEmpty() {
-		t.Errorf("The game board should not be empty after putting a handicap")
-	}
+	_, err = gameState.ExecuteCommandFromCli("handicap", []string{"2"})
+	assert.NoError(t, err)
+	assert.False(t, gameState.board.IsEmpty(), "The game board should not be empty after putting a handicap")
 
-	gameState, _ = Start(9)
-	gameState.ExecuteCommand("place", []string{"1", "1"})
-	if gameState.board.IsEmpty() {
-		t.Errorf("The game board should not be empty after placing a stone")
-	}
+	gameState, err = NewGameState(9)
+	assert.NoError(t, err)
 
-	_, err = gameState.ExecuteCommand("place", []string{"1", "1"})
-	if err == nil {
-		t.Errorf("Placing a stone over another one should return an error")
-	}
+	_, err = gameState.ExecuteCommandFromCli("place", []string{"1", "1"})
+	assert.NoError(t, err)
+	assert.False(t, gameState.board.IsEmpty(), "The game board should not be empty after placing a stone")
 
-	_, err = gameState.ExecuteCommand("invalid", []string{})
-	if err == nil {
-		t.Errorf("Executing an invalid command should return an error")
-	}
+	_, err = gameState.ExecuteCommandFromCli("place", []string{"1", "1"})
+	assert.Error(t, err, "Placing a stone over another one should return an error")
 
-	_, err = gameState.ExecuteCommand("handicap", []string{})
-	_, err2 := gameState.ExecuteCommand("handicap", []string{"asd"})
-	_, err3 := gameState.ExecuteCommand("place", []string{})
-	_, err4 := gameState.ExecuteCommand("place", []string{"asd"})
-	if err == nil || err2 == nil || err3 == nil || err4 == nil {
-		t.Errorf("Passing invalid arguments to the command should throw an error")
-	}
+	_, err = gameState.ExecuteCommandFromCli("invalid", []string{})
+	assert.Error(t, err, "Executing an invalid command should return an error")
+
+	_, err1 := gameState.ExecuteCommandFromCli("handicap", []string{})
+	_, err2 := gameState.ExecuteCommandFromCli("handicap", []string{"asd"})
+	_, err3 := gameState.ExecuteCommandFromCli("place", []string{})
+	_, err4 := gameState.ExecuteCommandFromCli("place", []string{"asd"})
+
+	assert.Error(t, err1)
+	assert.Error(t, err2)
+	assert.Error(t, err3)
+	assert.Error(t, err4)
 }
 
-func TestEndturn(t *testing.T) {
-	gameState, _ := Start(9)
-	gameState.EndTurn()
+func TestExecutePassCommand(t *testing.T) {
+	gameState, err := NewGameState(9)
+	assert.NoError(t, err)
 
-	if gameState.activePlayer != gameState.player2 {
-		t.Errorf("Ending the first player's turn should make player 2 the active player")
-	}
-
-	gameState.EndTurn()
-
-	if gameState.activePlayer != gameState.player1 {
-		t.Errorf("Ending the second player's turn should make player 1 the active player")
-	}
+	_, err = gameState.ExecuteCommandFromCli("pass", []string{})
+	assert.NoError(t, err)
+	assert.True(t, gameState.board.IsEmpty(), "The game board should still be empty after player1 passed")
+	assert.Equal(t, gameState.activePlayer, gameState.player2, "Turn should be to the next player")
 }
+
+func TestSwitchPlayerTurn(t *testing.T) {
+	gameState, err := NewGameState(9)
+	assert.NoError(t, err)
+
+	gameState.switchActivePlayer()
+	assert.Equal(t, gameState.player2, gameState.activePlayer, "Switching should make player 2 the active player")
+
+	gameState.switchActivePlayer()
+	assert.Equal(t, gameState.player1, gameState.activePlayer, "Switching should make player 1 the active player")
+}
+
