@@ -29,7 +29,7 @@ func (b *BoardState) ShowBoard() {
 		var line = fmt.Sprintf("%v ", i)
 		var vertBarsLine = "   "
 		for j := range dimension {
-			var elementAtPlace = b.GetPlace(BoardPosition{Row: i, CrossPoint: j})
+			var elementAtPlace = b.GetCrossPoint(BoardPosition{Row: i, CrossPoint: j})
 			var elementString string
 			switch elementAtPlace {
 			case Vacant:

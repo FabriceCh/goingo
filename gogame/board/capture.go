@@ -24,6 +24,10 @@ func addInSet(s Set, bp BoardPosition) {
 	s[bp] = struct{}{}
 }
 
+func (s *Set) IsEmpty() bool {
+	return len(s.ToArray()) == 0
+}
+
 func (s *Set) ToArray() []BoardPosition {
 	arr := make([]BoardPosition, 0)
 	for pos := range *s {
@@ -90,7 +94,7 @@ func (board *BoardState) findGroup(playerColor CrossPoint, lastPos BoardPosition
 		}
 		addInSet(seen, pos)
 
-		switch board.GetPlace(pos) {
+		switch board.GetCrossPoint(pos) {
 		case playerColor:
 			// add to group and continue searching
 			addInSet(group, pos)

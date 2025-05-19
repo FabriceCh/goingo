@@ -48,45 +48,47 @@ func (b *BoardState) Capture(position BoardPosition) {
 	b.Rows[position.Row].CrossPoints[position.CrossPoint] = Vacant
 }
 
-func (b *BoardState) Place(stone CrossPoint, position BoardPosition) (int, error) {
+func (b *BoardState) Place(stone CrossPoint, position BoardPosition) (points int, err error) {
 	if !b.IsWithinBounds(position) {
 		return 0, errors.New("position not on the board")
 	} else if !b.IsPlaceEmpty(position) {
 		return 0, errors.New("board position not empty")
 	} else {
 		b.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
-		points := b.CheckCapture(stone, position)
+		points = b.CheckCapture(stone, position)
+		if points == 0 {
+			suicideGroup := b.findGroup(stone, position)
+			if !suicideGroup.IsEmpty() {
+				return 0, errors.New("placing a stone here is violating the suicide rule")
+			}
+		}
 		return points, nil
 	}
 }
 
-func (b *BoardState) Size() int {
+func (b BoardState) Size() int {
 	return len(b.Rows)
 }
 
-func (b *BoardState) IsWithinBounds(pos BoardPosition) bool {
+func (b BoardState) IsWithinBounds(pos BoardPosition) bool {
 	return pos.Row < b.Size() && pos.Row > -1 && pos.CrossPoint < b.Size() && pos.CrossPoint > -1
 }
 
-func (b *BoardState) GetPlace(position BoardPosition) CrossPoint {
+func (b BoardState) GetCrossPoint(position BoardPosition) CrossPoint {
 	if !b.IsWithinBounds(position) {
 		return Wall
 	}
 	return b.Rows[position.Row].CrossPoints[position.CrossPoint]
 }
 
-func (b *BoardState) IsPlaceEmpty(position BoardPosition) bool {
+func (b BoardState) IsPlaceEmpty(position BoardPosition) bool {
 	if !b.IsWithinBounds(position) {
 		return false
 	}
-	return b.GetPlace(position) == Vacant
+	return b.GetCrossPoint(position) == Vacant
 }
 
-/*
-*	IsEmpty
-*   function that determines if the board is empty
- */
-func (b *BoardState) IsEmpty() bool {
+func (b BoardState) IsEmpty() bool {
 	for i := range b.Rows {
 		for j := range b.Rows[i].CrossPoints {
 			if !b.IsPlaceEmpty(BoardPosition{Row: i, CrossPoint: j}) {
@@ -97,7 +99,7 @@ func (b *BoardState) IsEmpty() bool {
 	return true
 }
 
-func (b *BoardState) DeepCopy() BoardState {
+func (b BoardState) DeepCopy() BoardState {
 	copiedBoardState := BoardState{
 		Rows: make([]BoardRow, b.Size()),
 	}
@@ -106,9 +108,23 @@ func (b *BoardState) DeepCopy() BoardState {
 			CrossPoints: make([]CrossPoint, b.Size()),
 		}
 		for j := range b.Size() {
-			row.CrossPoints[j] = b.GetPlace(BoardPosition{Row: i, CrossPoint: j})
+			row.CrossPoints[j] = b.GetCrossPoint(BoardPosition{Row: i, CrossPoint: j})
 		}
 		copiedBoardState.Rows[i] = row
 	}
 	return copiedBoardState
+}
+
+func (b BoardState) IsEqual(otherBoard *BoardState) bool {
+	if b.Size() != otherBoard.Size() {
+		return false
+	}
+	for i := range b.Size() {
+		for j := range b.Size() {
+			if b.GetCrossPoint(BoardPosition{Row: i, CrossPoint: j}) != otherBoard.GetCrossPoint(BoardPosition{Row: i, CrossPoint: j}) {
+				return false
+			}
+		}
+	}
+	return true
 }

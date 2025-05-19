@@ -47,7 +47,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 	}
 
 	for _, pos := range whitePiecesPositions {
-		if boardState.GetPlace(pos) != StoneP2 {
+		if boardState.GetCrossPoint(pos) != StoneP2 {
 			t.Errorf("Position (%d,%d) should still have white stones.", pos.Row, pos.CrossPoint)
 		}
 	}

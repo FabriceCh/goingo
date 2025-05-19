@@ -95,13 +95,18 @@ type PlaceCommand struct {
 
 func (p PlaceCommand) Execute(g *GameState) error {
 	g.SaveTurn()
-	points, err := g.board.Place(g.activePlayer.stone, board.BoardPosition{Row: p.Row, CrossPoint: p.CrossPoint})
+	pendingBoardState := g.board.DeepCopy()
+	points, err := pendingBoardState.Place(g.activePlayer.stone, board.BoardPosition{Row: p.Row, CrossPoint: p.CrossPoint})
 	if err != nil {
-		_, _ = g.history.Pop()
 		return err
 	}
-	g.activePlayer.points += points
 
+	if g.history.Contains(pendingBoardState) {
+		return fmt.Errorf("this move violates the rule of prohibition of repetition: the resulting position has occured previously in the game")
+	}
+
+	g.activePlayer.points += points
+	g.board = pendingBoardState
 	g.EndTurn()
 	return nil
 }

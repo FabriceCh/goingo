@@ -17,7 +17,7 @@ func TestSetSmallHandicap(t *testing.T) {
 	assert.False(t, boardState.IsEmpty(), "Board should not be empty after setting a valid handicap level.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 6}), "Handicap position should not be empty.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 6, CrossPoint: 2}), "Handicap position should not be empty.")
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 6}), "Handicap stones should belong to P1.")
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 2, CrossPoint: 6}), "Handicap stones should belong to P1.")
 
 	boardState, _ = Initialize(13)
 	err = boardState.SetHandicap(2)
@@ -25,7 +25,7 @@ func TestSetSmallHandicap(t *testing.T) {
 	assert.False(t, boardState.IsEmpty(), "Board should not be empty after setting a valid handicap level.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 2, CrossPoint: 10}), "Handicap position should not be empty.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 10, CrossPoint: 2}), "Handicap position should not be empty.")
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 10}), "Handicap stones should belong to P1.")
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 2, CrossPoint: 10}), "Handicap stones should belong to P1.")
 
 	boardState, _ = Initialize(19)
 	err = boardState.SetHandicap(3)
@@ -34,7 +34,7 @@ func TestSetSmallHandicap(t *testing.T) {
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 3, CrossPoint: 15}), "Handicap position should not be empty.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 15, CrossPoint: 3}), "Handicap position should not be empty.")
 	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 15, CrossPoint: 15}), "Handicap position should not be empty.")
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 3, CrossPoint: 15}), "Handicap stones should belong to P1.")
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 3, CrossPoint: 15}), "Handicap stones should belong to P1.")
 
 	boardState, _ = Initialize(9)
 	_, _ = boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})

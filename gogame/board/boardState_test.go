@@ -42,9 +42,9 @@ func TestGetPlace(t *testing.T) {
 	boardState.Place(StoneP1, BoardPosition{Row: 1, CrossPoint: 0})
 	boardState.Place(StoneP2, BoardPosition{Row: 2, CrossPoint: 0})
 
-	assert.Equal(t, Vacant, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}))
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}))
-	assert.Equal(t, StoneP2, boardState.GetPlace(BoardPosition{Row: 2, CrossPoint: 0}))
+	assert.Equal(t, Vacant, boardState.GetCrossPoint(BoardPosition{Row: 0, CrossPoint: 0}))
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 1, CrossPoint: 0}))
+	assert.Equal(t, StoneP2, boardState.GetCrossPoint(BoardPosition{Row: 2, CrossPoint: 0}))
 }
 
 func TestIsPlaceEmpty(t *testing.T) {
@@ -58,19 +58,19 @@ func TestIsPlaceEmpty(t *testing.T) {
 func TestPlace(t *testing.T) {
 	boardState, _ := Initialize(9)
 	boardState.Place(StoneP1, BoardPosition{Row: 0, CrossPoint: 0})
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 0, CrossPoint: 0}),
 		"Position (0,0) should be occupied by a P1 stone.")
 
 	boardState.Place(StoneP2, BoardPosition{Row: 1, CrossPoint: 0})
 
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 0, CrossPoint: 0}),
 		"The stone at (0,0) should not have been modified.")
-	assert.Equal(t, StoneP2, boardState.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}),
+	assert.Equal(t, StoneP2, boardState.GetCrossPoint(BoardPosition{Row: 1, CrossPoint: 0}),
 		"Position (1,0) should be occupied by a P2 stone.")
 
 	_, err := boardState.Place(StoneP2, BoardPosition{Row: 0, CrossPoint: 0})
 	assert.Error(t, err, "Placing a stone on another stone should return an error.")
-	assert.Equal(t, StoneP1, boardState.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+	assert.Equal(t, StoneP1, boardState.GetCrossPoint(BoardPosition{Row: 0, CrossPoint: 0}),
 		"Position (0,0) should still be occupied by a P1 stone.")
 
 	boardState, _ = Initialize(9)
@@ -86,15 +86,15 @@ func TestDeepCopy(t *testing.T) {
 	boardState.Place(StoneP2, BoardPosition{Row: 1, CrossPoint: 0})
 
 	copiedBoard := boardState.DeepCopy()
-	assert.Equal(t, StoneP1, copiedBoard.GetPlace(BoardPosition{Row: 0, CrossPoint: 0}),
+	assert.Equal(t, StoneP1, copiedBoard.GetCrossPoint(BoardPosition{Row: 0, CrossPoint: 0}),
 		"Position (0,0) in copied board should be occupied by a P1 stone.")
-	assert.Equal(t, StoneP2, copiedBoard.GetPlace(BoardPosition{Row: 1, CrossPoint: 0}),
+	assert.Equal(t, StoneP2, copiedBoard.GetCrossPoint(BoardPosition{Row: 1, CrossPoint: 0}),
 		"Position (1,0) in copied board should be occupied by a P2 stone.")
-	assert.Equal(t, Vacant, copiedBoard.GetPlace(BoardPosition{Row: 1, CrossPoint: 1}),
+	assert.Equal(t, Vacant, copiedBoard.GetCrossPoint(BoardPosition{Row: 1, CrossPoint: 1}),
 		"Position (1,1) in copied board should be vacant.")
 
 	boardState.Place(StoneP1, BoardPosition{Row: 2, CrossPoint: 2})
-	assert.Equal(t, Vacant, copiedBoard.GetPlace(BoardPosition{Row: 2, CrossPoint: 2}),
+	assert.Equal(t, Vacant, copiedBoard.GetCrossPoint(BoardPosition{Row: 2, CrossPoint: 2}),
 		"Position (2,2) in copied board should remain unchanged.")
 
 }

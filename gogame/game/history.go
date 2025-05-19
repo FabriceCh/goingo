@@ -37,3 +37,12 @@ func (h *History) Pop() (*Turn, error) {
 	h.turns = h.turns[:len(h.turns)-1]
 	return &t, nil
 }
+
+func (h *History) Contains(board board.BoardState) bool {
+	for _, turn := range h.turns {
+		if turn.BoardState.IsEqual(&board) {
+			return true
+		}
+	}
+	return false
+}
