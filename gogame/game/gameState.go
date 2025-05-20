@@ -78,7 +78,7 @@ func (g *GameState) ExecuteCommandFromCli(commandName CommandName, args []string
 		return "", err
 	}
 
-	return
+	return msg, err
 }
 
 func (g *GameState) switchActivePlayer() {
