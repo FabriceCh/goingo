@@ -10,12 +10,12 @@ type posInfo struct {
 }
 
 func (board *BoardState) getNeighbours(pos BoardPosition) []BoardPosition {
-	var up, down, left, right BoardPosition
-	up = BoardPosition{Row: pos.Row + 1, CrossPoint: pos.CrossPoint}
-	down = BoardPosition{Row: pos.Row - 1, CrossPoint: pos.CrossPoint}
-	left = BoardPosition{Row: pos.Row, CrossPoint: pos.CrossPoint - 1}
-	right = BoardPosition{Row: pos.Row, CrossPoint: pos.CrossPoint + 1}
-	return []BoardPosition{up, down, left, right}
+	return []BoardPosition{
+		{pos.Row + 1, pos.CrossPoint},
+		{pos.Row - 1, pos.CrossPoint},
+		{pos.Row, pos.CrossPoint - 1},
+		{pos.Row, pos.CrossPoint + 1},
+	}
 }
 
 type Set map[BoardPosition]struct{}
@@ -51,11 +51,9 @@ func (board *BoardState) CheckCapture(lastPieceColor CrossPoint, lastPiecePositi
 	var groups []Set
 	adjacentPositions := board.getNeighbours(lastPiecePosition)
 	for _, adjacentPos := range adjacentPositions {
-		if isPositionInAGroup(adjacentPos, groups) {
-			// skip to avoid duplicated groups
-			continue
+		if !isPositionInAGroup(adjacentPos, groups) {
+			groups = append(groups, board.findGroup(opponentColor, adjacentPos))
 		}
-		groups = append(groups, board.findGroup(opponentColor, adjacentPos))
 	}
 
 	points = 0

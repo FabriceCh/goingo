@@ -35,8 +35,7 @@ type Command interface {
 }
 
 type BaseCommand struct {
-	Name  CommandName
-	Color board.CrossPoint
+	Name CommandName
 }
 
 // Handicap
@@ -50,11 +49,10 @@ func (p HandicapCommand) Execute(g *GameState) error {
 	return err
 }
 
-func NewHandicapCommand(color board.CrossPoint, level int) HandicapCommand {
+func NewHandicapCommand(level int) HandicapCommand {
 	return HandicapCommand{
 		BaseCommand: BaseCommand{
-			Name:  CommandHandicap,
-			Color: color,
+			Name: CommandHandicap,
 		},
 		Level: level,
 	}
@@ -74,11 +72,10 @@ func (p PassCommand) Execute(g *GameState) error {
 	return nil
 }
 
-func NewPassCommand(color board.CrossPoint) PassCommand {
+func NewPassCommand() PassCommand {
 	return PassCommand{
 		BaseCommand: BaseCommand{
-			Name:  CommandPass,
-			Color: color,
+			Name: CommandPass,
 		},
 	}
 }
@@ -114,11 +111,10 @@ func (p PlaceCommand) Execute(g *GameState) error {
 var _ Command = PlaceCommand{}       // Verify that T implements I.
 var _ Command = (*PlaceCommand)(nil) // Verify that *T implements I.
 
-func NewPlaceCommand(color board.CrossPoint, row int, crossPoint int) PlaceCommand {
+func NewPlaceCommand(row int, crossPoint int) PlaceCommand {
 	return PlaceCommand{
 		BaseCommand: BaseCommand{
-			Name:  CommandPlace,
-			Color: color,
+			Name: CommandPlace,
 		},
 		Row:        row,
 		CrossPoint: crossPoint,

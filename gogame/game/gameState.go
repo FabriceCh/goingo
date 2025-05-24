@@ -51,7 +51,7 @@ func (g *GameState) ExecuteCommandFromCli(commandName CommandName, args []string
 			return
 		}
 		level, _ := strconv.Atoi(args[0])
-		command = NewHandicapCommand(g.activePlayer.stone, level)
+		command = NewHandicapCommand(level)
 		msg = fmt.Sprintf("Set handicap of level %d for Player 1", level)
 	case CommandPlace:
 		if len(args) < 2 {
@@ -60,10 +60,10 @@ func (g *GameState) ExecuteCommandFromCli(commandName CommandName, args []string
 		}
 		row, _ := strconv.Atoi(args[0])
 		crossPoint, _ := strconv.Atoi(args[1])
-		command = NewPlaceCommand(g.activePlayer.stone, row, crossPoint)
+		command = NewPlaceCommand(row, crossPoint)
 		msg = fmt.Sprintf("Placed a stone at (%d,%d) for %s", row, crossPoint, g.activePlayer.name)
 	case CommandPass:
-		command = NewPassCommand(g.activePlayer.stone)
+		command = NewPassCommand()
 	case CommandUndo:
 		command = NewUndoCommand()
 	}
