@@ -24,7 +24,7 @@ func main() {
 		command := args[0]
 		msg, renderBoard, err := execute(command, args[1:])
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(err.Error())
 		} else {
 			if msg != "" {
 				fmt.Println(msg)
@@ -47,8 +47,6 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 		place <X> <Y>: place a stone at given position if possible.\n
 		pass: skip your turn without placing any stone.\n
 		exit: leave the game.`
-		renderBoard = false
-		err = nil
 	case "start":
 		if len(args) < 1 {
 			err = errors.New("Too few arguments")
@@ -57,7 +55,9 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 		size, _ := strconv.Atoi(args[0])
 		var newGame game.GameState
 		newGame, err = game.NewGameState(size)
-		if err == nil {
+		if err != nil {
+			return "", false, err
+		} else {
 			currentGame = newGame
 			msg = fmt.Sprintf("Started a new game with a %dx%d board.\nYou can place a stone using the command \"place <X> <Y>\".", size, size)
 			renderBoard = true
@@ -68,7 +68,10 @@ func execute(command string, args []string) (msg string, renderBoard bool, err e
 			return "", false, err
 		}
 		msg, err = currentGame.ExecuteCommandFromCli(gameCommand, args)
-		renderBoard = err == nil
+		if err != nil {
+			return "", false, err
+		}
+		renderBoard = true
 	}
-	return
+	return msg, renderBoard, err
 }
