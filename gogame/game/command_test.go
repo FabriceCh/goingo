@@ -1,8 +1,10 @@
 package game
 
 import (
-	"github.com/stretchr/testify/assert"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"goingo/gogame/board"
 )
@@ -34,7 +36,7 @@ func TestStringToCommand(t *testing.T) {
 }
 
 func TestNewHandicapCommand_Execute(t *testing.T) {
-	gameState, err := NewGameState(9)
+	gameState, err := NewGameState(19)
 	assert.NoError(t, err)
 
 	command := NewHandicapCommand(3)
@@ -42,9 +44,10 @@ func TestNewHandicapCommand_Execute(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.False(t, gameState.board.IsEmpty(), "Board should not be empty after setting a valid handicap level.")
-	assert.False(t, gameState.board.IsPlaceEmpty(board.BoardPosition{Row: 3, CrossPoint: 15}), "Handicap position should not be empty.")
-	assert.False(t, gameState.board.IsPlaceEmpty(board.BoardPosition{Row: 15, CrossPoint: 3}), "Handicap position should not be empty.")
-	assert.False(t, gameState.board.IsPlaceEmpty(board.BoardPosition{Row: 15, CrossPoint: 15}), "Handicap position should not be empty.")
+	assert.False(t, gameState.board.IsCrosspointEmpty(board.BoardPosition{Row: 3, CrossPoint: 15}), "Handicap position should not be empty.")
+	assert.False(t, gameState.board.IsCrosspointEmpty(board.BoardPosition{Row: 15, CrossPoint: 3}), "Handicap position should not be empty.")
+	assert.False(t, gameState.board.IsCrosspointEmpty(board.BoardPosition{Row: 15, CrossPoint: 15}), "Handicap position should not be empty.")
+	fmt.Println(gameState.board.GetCrossPoint(board.BoardPosition{3, 15}))
 	assert.Equal(t, board.StoneP1, gameState.board.GetCrossPoint(board.BoardPosition{Row: 3, CrossPoint: 15}), "Handicap stones should belong to P1.")
 }
 
@@ -61,7 +64,7 @@ func TestNewPassCommand_Execute(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotEqual(t, activePlayerBeforePass, activePlayerAfterPass)
-	assert.False(t, boardBeforePass.IsEqual(&boardAfterPass))
+	assert.True(t, boardBeforePass.IsEqual(&boardAfterPass), "Board should remain the same afteer a player passes their turn.")
 }
 
 func TestNewPlaceCommand_Execute(t *testing.T) {
@@ -72,6 +75,13 @@ func TestNewPlaceCommand_Execute(t *testing.T) {
 	err = command.Execute(&gameState)
 
 	assert.NoError(t, err)
+	assert.Equal(t, board.StoneP1, gameState.board.GetCrossPoint(board.BoardPosition{Row: 0, CrossPoint: 0}), "Crosspoint 0,0 should be filled with player 1 stone.")
+
+	command = NewPlaceCommand(1, 0)
+	err = command.Execute(&gameState)
+
+	assert.NoError(t, err)
+	assert.Equal(t, board.StoneP2, gameState.board.GetCrossPoint(board.BoardPosition{Row: 1, CrossPoint: 0}), "Crosspoint 0,0 should be filled with player 1 stone.")
 	// TODO: Add more assertions based on expected state after Place execution
 }
 

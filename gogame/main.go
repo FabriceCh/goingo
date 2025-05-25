@@ -18,7 +18,7 @@ func main() {
 	for {
 		fmt.Print("→ ")
 		input, _ := reader.ReadString('\n')
-		input = strings.Replace(input, "\n", "", -1)
+		input = strings.ReplaceAll(input, "\n", "")
 		args := strings.Split(input, " ")
 
 		command := args[0]

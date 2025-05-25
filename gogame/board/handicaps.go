@@ -146,7 +146,7 @@ var LargeBoardHandicaps = HandicapSet{
 
 func (boardState *BoardState) SetHandicap(level int) error {
 	if !boardState.IsEmpty() {
-		return errors.New("Board is not empty")
+		return errors.New("board is not empty")
 	}
 
 	var set HandicapSet
@@ -158,12 +158,15 @@ func (boardState *BoardState) SetHandicap(level int) error {
 	case 19:
 		set = LargeBoardHandicaps
 	default:
-		return errors.New("No handicap set available for this board size")
+		return errors.New("no handicap set available for this board size")
 	}
 
+	if level < 2 || level > 9 {
+		return errors.New("invalid handicap level")
+	}
 	var positions = set.levels[level]
 	if len(positions) == 0 {
-		return errors.New("Invalid handicap level")
+		return errors.New("invalid handicap level")
 	} else {
 		for _, position := range positions {
 			boardState.Place(StoneP1, set.positions[position])

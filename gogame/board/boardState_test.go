@@ -18,7 +18,7 @@ func TestInitialize(t *testing.T) {
 	assert.NoError(t, err)
 
 	// 10 is not a valid option
-	boardState, err = Initialize(10)
+	_, err = Initialize(10)
 	assert.Error(t, err)
 }
 
@@ -51,8 +51,8 @@ func TestIsPlaceEmpty(t *testing.T) {
 	boardState, _ := Initialize(9)
 	boardState.Place(StoneP1, BoardPosition{Row: 1, CrossPoint: 0})
 
-	assert.True(t, boardState.IsPlaceEmpty(BoardPosition{Row: 0, CrossPoint: 0}))
-	assert.False(t, boardState.IsPlaceEmpty(BoardPosition{Row: 1, CrossPoint: 0}))
+	assert.True(t, boardState.IsCrosspointEmpty(BoardPosition{Row: 0, CrossPoint: 0}))
+	assert.False(t, boardState.IsCrosspointEmpty(BoardPosition{Row: 1, CrossPoint: 0}))
 }
 
 func TestPlace(t *testing.T) {

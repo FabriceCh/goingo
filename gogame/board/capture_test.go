@@ -25,7 +25,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 	}
 
 	for _, pos := range blackPiecesPositions {
-		if boardState.IsPlaceEmpty(pos) {
+		if boardState.IsCrosspointEmpty(pos) {
 			t.Errorf("Position (%d,%d) should not be empty yet.", pos.Row, pos.CrossPoint)
 		}
 	}
@@ -41,7 +41,7 @@ func testWhiteCapturesBlack(t *testing.T, blackPiecesPositions []BoardPosition, 
 		boardState.ShowBoard()
 	}
 	for _, pos := range blackPiecesPositions {
-		if !boardState.IsPlaceEmpty(pos) {
+		if !boardState.IsCrosspointEmpty(pos) {
 			t.Errorf("Position (%d,%d) should be empty because of a capture.", pos.Row, pos.CrossPoint)
 		}
 	}

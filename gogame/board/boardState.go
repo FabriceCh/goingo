@@ -51,7 +51,7 @@ func (b *BoardState) Capture(position BoardPosition) {
 func (b *BoardState) Place(stone CrossPoint, position BoardPosition) (points int, err error) {
 	if !b.IsWithinBounds(position) {
 		return 0, errors.New("position not on the board")
-	} else if !b.IsPlaceEmpty(position) {
+	} else if !b.IsCrosspointEmpty(position) {
 		return 0, errors.New("board position not empty")
 	} else {
 		b.Rows[position.Row].CrossPoints[position.CrossPoint] = stone
@@ -81,7 +81,7 @@ func (b BoardState) GetCrossPoint(position BoardPosition) CrossPoint {
 	return b.Rows[position.Row].CrossPoints[position.CrossPoint]
 }
 
-func (b BoardState) IsPlaceEmpty(position BoardPosition) bool {
+func (b BoardState) IsCrosspointEmpty(position BoardPosition) bool {
 	if !b.IsWithinBounds(position) {
 		return false
 	}
@@ -91,7 +91,7 @@ func (b BoardState) IsPlaceEmpty(position BoardPosition) bool {
 func (b BoardState) IsEmpty() bool {
 	for i := range b.Rows {
 		for j := range b.Rows[i].CrossPoints {
-			if !b.IsPlaceEmpty(BoardPosition{Row: i, CrossPoint: j}) {
+			if !b.IsCrosspointEmpty(BoardPosition{Row: i, CrossPoint: j}) {
 				return false
 			}
 		}
